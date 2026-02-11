@@ -1,6 +1,8 @@
 import { articles } from "@/lib/data";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type Article = {
   id: number;
   title: string;
