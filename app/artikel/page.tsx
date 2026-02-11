@@ -14,9 +14,7 @@ type Article = {
 
 
 async function getArticles(): Promise<Article[]> {
-  const res = await fetch("http://localhost:3000/api/articles", {
-    cache: "no-store",
-  });
+  const res = await fetch("/api/articles", { cache: "no-store" });
 
   const data = await res.json();
   return data as Article[];
