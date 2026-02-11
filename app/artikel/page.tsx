@@ -1,4 +1,4 @@
-import { articles } from "@/lib/data";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -9,38 +9,34 @@ type Article = {
   excerpt: string;
   image: string;
   category: string;
-  slug: string; // ← WAJIB
+  slug: string;
 };
 
-
-async function getArticles(): Promise<Article[]> {
-  const res = await fetch("/api/articles", { cache: "no-store" });
-
-  const data = await res.json();
-  return data as Article[];
-}
-
-
-
 export default async function ArtikelPage() {
-  const articles = await getArticles();
+  // 🔥 langsung query database (bukan fetch API)
+  const articles: Article[] = await prisma.article.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6">
-
         <h1 className="text-4xl font-bold text-center">Artikel</h1>
 
         <div className="mt-16 grid md:grid-cols-3 gap-8">
-
           {articles.map((item) => (
             <Link
-                key={item.id}
-                href={`/artikel/${item.slug}`}
-                className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden block"
-                >
-
-              <img src={item.image} className="h-48 w-full object-cover" />
+              key={item.id}
+              href={`/artikel/${item.slug}`}
+              className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden block"
+            >
+              <img
+                src={item.image}
+                className="h-48 w-full object-cover"
+                alt={item.title}
+              />
 
               <div className="p-5">
                 <span className="text-xs bg-yellow-400 px-3 py-1 rounded-full font-semibold">
@@ -57,9 +53,7 @@ export default async function ArtikelPage() {
               </div>
             </Link>
           ))}
-
         </div>
-
       </div>
     </section>
   );
