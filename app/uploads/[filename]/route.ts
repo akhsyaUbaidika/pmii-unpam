@@ -1,22 +1,26 @@
 import { readFile } from "fs/promises";
 import path from "path";
+import { NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { filename: string } }
+  req: NextRequest,
+  context: { params: Promise<{ filename: string }> }
 ) {
   try {
+    // ⚠️ Next 16: params harus di-await
+    const { filename } = await context.params;
+
     const filePath = path.join(
       process.cwd(),
       "storage/uploads",
-      params.filename
+      filename
     );
 
     const fileBuffer = await readFile(filePath);
 
-    const ext = params.filename.split(".").pop() ?? "";
+    const ext = filename.split(".").pop() ?? "";
 
     const mimeTypes: Record<string, string> = {
       png: "image/png",
@@ -34,7 +38,7 @@ export async function GET(
         "Cache-Control": "public, max-age=31536000",
       },
     });
-  } catch {
+  } catch (error) {
     return new Response("File not found", { status: 404 });
   }
 }
