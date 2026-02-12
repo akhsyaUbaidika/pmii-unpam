@@ -1,18 +1,19 @@
 import { verifyToken, getTokenFromHeader } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
-export const runtime = "nodejs"; // WAJIB agar bisa pakai fs
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-     // 🔒 CEK TOKEN
+  // 🔒 cek token
   const token = getTokenFromHeader(req);
   const user = token && verifyToken(token);
 
   if (!user) {
     return new Response("Unauthorized", { status: 401 });
   }
+
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
@@ -21,23 +22,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // ambil extension file
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     const fileExt = file.name.split(".").pop();
     const fileName = Date.now() + "." + fileExt;
 
-    const uploadPath = path.join(process.cwd(), "public/uploads", fileName);
+    // 🔥 folder upload RUNTIME (bukan public!)
+    const uploadDir = path.join(process.cwd(), "storage/uploads");
+    await mkdir(uploadDir, { recursive: true });
 
+    const uploadPath = path.join(uploadDir, fileName);
     await writeFile(uploadPath, buffer);
 
     const fileUrl = `/uploads/${fileName}`;
 
-    return NextResponse.json({
-      url: fileUrl,
-    });
-
+    return NextResponse.json({ url: fileUrl });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
