@@ -33,11 +33,16 @@ export async function GET(
     const contentType = mimeTypes[ext] || "application/octet-stream";
 
     return new Response(fileBuffer, {
+      status: 200,
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000",
+        "Content-Length": fileBuffer.length.toString(), // 🔴 ini kunci utama
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Disposition": "inline",
+        "Accept-Ranges": "bytes",
       },
     });
+
   } catch (error) {
     return new Response("File not found", { status: 404 });
   }

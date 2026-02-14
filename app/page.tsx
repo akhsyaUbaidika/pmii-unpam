@@ -26,7 +26,7 @@ export default function HomePage() {
 
           <div className="flex justify-center">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Logo_PMII.svg/512px-Logo_PMII.svg.png"
+              src="https://pmii-unpam.onrender.com/uploads/1770900118592.png"
               alt="Logo PMII"
               className="w-72 drop-shadow-xl"
             />
