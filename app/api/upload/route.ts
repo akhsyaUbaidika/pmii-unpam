@@ -1,17 +1,21 @@
 import { verifyToken, getTokenFromHeader } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
 export async function POST(req: NextRequest) {
-  // 🔒 cek token
+  // 🔒 Verify JWT
   const token = getTokenFromHeader(req);
   const user = token && verifyToken(token);
 
   if (!user) {
-    return new Response("Unauthorized", { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -26,18 +30,27 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     const fileExt = file.name.split(".").pop();
-    const fileName = Date.now() + "." + fileExt;
+    const fileName = `${Date.now()}.${fileExt}`;
 
-    // 🔥 folder upload RUNTIME (bukan public!)
-    const uploadDir = path.join(process.cwd(), "storage/uploads");
-    await mkdir(uploadDir, { recursive: true });
+    // 🚀 Upload ke Supabase Storage
+    const { error } = await supabase.storage
+      .from("uploads")
+      .upload(fileName, buffer, {
+        contentType: file.type,
+      });
 
-    const uploadPath = path.join(uploadDir, fileName);
-    await writeFile(uploadPath, buffer);
+    if (error) {
+      console.error(error);
+      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    }
 
-    const fileUrl = `/uploads/${fileName}`;
+    // 🔗 Ambil public URL
+    const { data } = supabase.storage
+      .from("uploads")
+      .getPublicUrl(fileName);
 
-    return NextResponse.json({ url: fileUrl });
+    return NextResponse.json({ url: data.publicUrl });
+
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });

@@ -1,45 +1,63 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { verifyToken, getTokenFromHeader } from "@/lib/auth";
 
-
-// GET ALL DOCUMENTATION
+// GET ALL DOCUMENTATION (Public)
 export async function GET() {
-  const docs = await prisma.documentation.findMany({
-    include: {
-      images: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const docs = await prisma.documentation.findMany({
+      include: { images: true },
+      orderBy: { createdAt: "desc" },
+    });
 
-  return NextResponse.json(docs);
+    return NextResponse.json(docs);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to fetch documentation" }, { status: 500 });
+  }
 }
 
-
-
-// CREATE DOCUMENTATION + GALLERY
+// CREATE DOCUMENTATION (Protected)
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    // 🔒 Verify JWT
+    const token = getTokenFromHeader(req as any);
+    const user = token && verifyToken(token);
 
-  const doc = await prisma.documentation.create({
-    data: {
-      title: body.title,
-      slug: body.title.toLowerCase().replace(/ /g, "-"),
-      excerpt: body.excerpt,
-      content: body.content,
-      coverImage: body.coverImage,
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-      images: {
-        create: body.images.map((img: string) => ({
-          imageUrl: img,
-        })),
+    const body = await req.json();
+
+    if (!body.title || !body.content) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const slug = body.title
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
+
+    const doc = await prisma.documentation.create({
+      data: {
+        title: body.title,
+        slug,
+        excerpt: body.excerpt ?? "",
+        content: body.content,
+        coverImage: body.coverImage ?? "",
+        images: {
+          create: (body.images ?? []).map((img: string) => ({
+            imageUrl: img,
+          })),
+        },
       },
-    },
-    include: {
-      images: true,
-    },
-  });
+      include: { images: true },
+    });
 
-  return NextResponse.json(doc);
+    return NextResponse.json(doc);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to create documentation" }, { status: 500 });
+  }
 }
