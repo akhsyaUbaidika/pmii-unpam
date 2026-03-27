@@ -12,31 +12,59 @@ export async function GET() {
     return NextResponse.json(articles);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch articles" },
+      { status: 500 }
+    );
   }
 }
 
 // CREATE ARTICLE (Protected)
 export async function POST(req: Request) {
   try {
-    // 🔒 Verify JWT
-    const token = getTokenFromHeader(req as any);
-    const user = token && verifyToken(token);
+    const token = getTokenFromHeader(req);
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const user = verifyToken(token);
+
+    if (!user || !user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
     const body = await req.json();
 
     if (!body.title || !body.content) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const slug = body.title
       .toLowerCase()
       .trim()
       .replace(/\s+/g, "-");
+
+    // ✅ Cek slug unik
+    const existing = await prisma.article.findUnique({
+      where: { slug },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "Slug already exists" },
+        { status: 409 }
+      );
+    }
 
     const article = await prisma.article.create({
       data: {
@@ -52,6 +80,9 @@ export async function POST(req: Request) {
     return NextResponse.json(article);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to create article" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create article" },
+      { status: 500 }
+    );
   }
 }

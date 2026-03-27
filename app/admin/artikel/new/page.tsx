@@ -4,31 +4,42 @@ import { useState } from "react";
 import ImageUploader from "@/components/admin/ImageUploader";
 
 export default function CreateArtikelPage() {
-  const token = typeof window !== "undefined"
-    ? localStorage.getItem("token") || ""
-    : "";
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token") || ""
+      : "";
 
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
   async function handleSubmit() {
-    await fetch("/api/articles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        title,
-        image: imageUrl,
-        excerpt: "dummy",
-        content: "dummy",
-        category: "Opini",
-        slug: title.toLowerCase().replaceAll(" ", "-"),
-      }),
-    });
+    try {
+      const res = await fetch("/api/articles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          title,
+          image: imageUrl,
+          excerpt: "dummy",
+          content: "dummy",
+          category: "Opini",
+        }),
+      });
 
-    alert("Artikel dibuat!");
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.error || "Gagal membuat artikel");
+        return;
+      }
+
+      alert("Artikel berhasil dibuat!");
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan");
+    }
   }
 
   return (
