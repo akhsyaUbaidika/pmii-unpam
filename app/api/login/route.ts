@@ -6,6 +6,8 @@ export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();
 
+    console.log("DATABASE_URL RAW:", process.env.DATABASE_URL);
+
     console.log("REQ:", { username, password });
 
     if (!username || !password) {
