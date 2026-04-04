@@ -1,20 +1,36 @@
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : process.env.NEXT_PUBLIC_BASE_URL || "https://pmiiunpam.netlify.app";
+
 async function getArticles() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles`, {
+  const res = await fetch(`${baseUrl}/api/articles`, {
     cache: "no-store",
   });
+
+  if (!res.ok) return [];
   return res.json();
 }
 
 async function getDocs() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/documentations`, {
+  const res = await fetch(`${baseUrl}/api/documentations`, {
     cache: "no-store",
   });
+
+  if (!res.ok) return [];
   return res.json();
 }
 
 export default async function HomePage() {
-  const articles = await getArticles();
-  const docs = await getDocs();
+  let articles = [];
+  let docs = [];
+
+  try {
+    articles = await getArticles();
+    docs = await getDocs();
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
 
   return (
     <main className="bg-gray-50 text-gray-900">
@@ -73,13 +89,22 @@ export default async function HomePage() {
           </h3>
 
           <div className="mt-10 grid md:grid-cols-3 gap-6">
+
+            {articles.length === 0 && (
+              <p className="col-span-3 text-center text-gray-500">
+                Belum ada artikel
+              </p>
+            )}
+
             {articles.slice(0, 3).map((item: any) => (
               <div key={item.id} className="bg-white rounded-2xl shadow overflow-hidden">
 
-                <img
-                  src={item.image}
-                  className="h-44 w-full object-cover"
-                />
+                {item.image && (
+                  <img
+                    src={item.image}
+                    className="h-44 w-full object-cover"
+                  />
+                )}
 
                 <div className="p-5">
                   <h4 className="font-bold">{item.title}</h4>
@@ -90,6 +115,7 @@ export default async function HomePage() {
 
               </div>
             ))}
+
           </div>
 
         </div>
@@ -104,6 +130,13 @@ export default async function HomePage() {
           </h3>
 
           <div className="mt-8 grid md:grid-cols-3 gap-6">
+
+            {docs.length === 0 && (
+              <p className="text-gray-500">
+                Belum ada dokumentasi
+              </p>
+            )}
+
             {docs.slice(0, 3).map((doc: any) => (
               <div key={doc.id} className="rounded-xl overflow-hidden">
                 <img
@@ -112,6 +145,7 @@ export default async function HomePage() {
                 />
               </div>
             ))}
+
           </div>
 
         </div>
