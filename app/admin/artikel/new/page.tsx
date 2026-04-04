@@ -46,11 +46,14 @@ export default function CreateArtikelPage() {
     <div className="p-10 max-w-xl space-y-4">
       <h1 className="text-2xl font-bold">Buat Artikel</h1>
 
-      <input
-        className="border p-2 w-full"
-        placeholder="Judul"
-        onChange={(e) => setTitle(e.target.value)}
+      <div className="bg-white p-6 rounded shadow space-y-4">
+        <input
+          className="border p-2 w-full rounded"
+          placeholder="Judul Artikel"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
       />
+      </div>
 
       <ImageUploader
         token={token}
