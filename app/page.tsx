@@ -60,7 +60,7 @@ export default async function HomePage() {
 
           <div className="flex justify-center">
             <img
-              src="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775463132213.png"
+              src="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775463579888.png"
               className="w-72"
             />
           </div>
