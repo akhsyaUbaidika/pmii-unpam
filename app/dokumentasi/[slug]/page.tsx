@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 type Documentation = {
@@ -20,7 +21,14 @@ type Documentation = {
 
 async function getDoc(slug: string): Promise<Documentation | null> {
   try {
-    const res = await fetch(`/api/documentations/${slug}`, {
+    const host = (await headers()).get("host");
+
+    if (!host) {
+      console.error("Host tidak ditemukan");
+      return null;
+    }
+
+    const res = await fetch(`https://${host}/api/documentations/${slug}`, {
       cache: "no-store",
     });
 
@@ -37,7 +45,9 @@ async function getDoc(slug: string): Promise<Documentation | null> {
 }
 
 export default async function DetailDokumentasi({ params }: Props) {
-  const { slug } = params; // 🔥 WAJIB
+  const { slug } = await params; // 🔥 WAJIB
+
+  console.log("SLUG DOC:", slug);
 
   if (!slug) {
     console.error("Slug undefined!");
