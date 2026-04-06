@@ -1,57 +1,91 @@
-import prisma from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import Link from "next/link";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
-  params: Promise<{ slug: string }>;
+type Documentation = {
+  id: number;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  slug: string;
 };
 
-export default async function DetailDokumentasi({ params }: Props) {
-  const { slug } = await params; // ← ini kunci penting
+async function getDocs(): Promise<Documentation[]> {
+  try {
+    const host = (await headers()).get("host");
 
-  const doc = await prisma.documentation.findUnique({
-    where: { slug },
-    include: { images: true },
-  });
+    const res = await fetch(`https://${host}/api/documentations`, {
+      cache: "no-store",
+    });
 
-  if (!doc) return notFound();
+    if (!res.ok) {
+      console.error("Failed to fetch documentations:", res.status);
+      return [];
+    }
+
+    return res.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return [];
+  }
+}
+
+export default async function DokumentasiPage() {
+  const docs = await getDocs();
 
   return (
-    <main className="bg-white pt-28 pb-20">
-      <div className="max-w-4xl mx-auto px-6">
+    <main className="bg-gray-50 min-h-screen pt-28 pb-20">
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* HEADER */}
+        <h1 className="text-4xl font-bold text-blue-700">
+          Dokumentasi
+        </h1>
 
-        {/* COVER */}
-        <img
-          src={doc.coverImage}
-          className="rounded-2xl mb-8 w-full"
-        />
-
-        <h1 className="text-4xl font-bold">{doc.title}</h1>
-
-        <p className="mt-6 text-gray-700 leading-relaxed whitespace-pre-line">
-          {doc.content}
+        <p className="mt-2 text-gray-600">
+          Arsip kegiatan PMII Komisariat Universitas Pamulang
         </p>
 
-        {/* GALLERY */}
-        {doc.images.length > 0 && (
-          <>
-            <h2 className="text-2xl font-bold mt-12 mb-6">
-              Galeri Kegiatan
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {doc.images.map((img) => (
+        {/* EMPTY STATE */}
+        {docs.length === 0 ? (
+          <p className="text-center mt-10 text-gray-500">
+            Belum ada dokumentasi.
+          </p>
+        ) : (
+          /* GRID */
+          <div className="mt-10 grid md:grid-cols-3 gap-8">
+            {docs.map((doc) => (
+              <Link
+                key={doc.id}
+                href={`/dokumentasi/${doc.slug}`}
+                className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden"
+              >
+                {/* IMAGE */}
                 <img
-                  key={img.id}
-                  src={img.imageUrl}
-                  className="rounded-xl"
+                  src={
+                    doc.coverImage && doc.coverImage.startsWith("http")
+                      ? doc.coverImage
+                      : "/placeholder.jpg"
+                  }
+                  className="h-48 w-full object-cover"
+                  alt={doc.title}
                 />
-              ))}
-            </div>
-          </>
-        )}
 
+                {/* CONTENT */}
+                <div className="p-5">
+                  <h3 className="font-bold text-lg">
+                    {doc.title}
+                  </h3>
+
+                  <p className="text-sm text-gray-600 mt-2">
+                    {doc.excerpt || "Tidak ada deskripsi"}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
