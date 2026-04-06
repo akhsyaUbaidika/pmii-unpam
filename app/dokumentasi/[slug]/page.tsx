@@ -1,19 +1,45 @@
-import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
-  params: Promise<{ slug: string }>;
+type Documentation = {
+  id: number;
+  title: string;
+  content: string;
+  coverImage: string;
+  slug: string;
+  images: {
+    id: number;
+    imageUrl: string;
+  }[];
 };
 
-export default async function DetailDokumentasi({ params }: Props) {
-  const { slug } = await params; // ← ini kunci penting
+type Props = {
+  params: { slug: string };
+};
 
-  const doc = await prisma.documentation.findUnique({
-    where: { slug },
-    include: { images: true },
-  });
+async function getDoc(slug: string): Promise<Documentation | null> {
+  try {
+    const host = (await headers()).get("host");
+
+    const res = await fetch(`https://${host}/api/documentations`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+
+    const docs: Documentation[] = await res.json();
+
+    return docs.find((d) => d.slug === slug) || null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export default async function DetailDokumentasi({ params }: Props) {
+  const doc = await getDoc(params.slug);
 
   if (!doc) return notFound();
 
@@ -23,18 +49,23 @@ export default async function DetailDokumentasi({ params }: Props) {
 
         {/* COVER */}
         <img
-          src={doc.coverImage}
+          src={
+            doc.coverImage && doc.coverImage.startsWith("http")
+              ? doc.coverImage
+              : "/placeholder.jpg"
+          }
           className="rounded-2xl mb-8 w-full"
+          alt={doc.title}
         />
 
         <h1 className="text-4xl font-bold">{doc.title}</h1>
 
         <p className="mt-6 text-gray-700 leading-relaxed whitespace-pre-line">
-          {doc.content}
+          {doc.content || "Konten belum tersedia."}
         </p>
 
         {/* GALLERY */}
-        {doc.images.length > 0 && (
+        {doc.images?.length > 0 && (
           <>
             <h2 className="text-2xl font-bold mt-12 mb-6">
               Galeri Kegiatan
@@ -44,7 +75,11 @@ export default async function DetailDokumentasi({ params }: Props) {
               {doc.images.map((img) => (
                 <img
                   key={img.id}
-                  src={img.imageUrl}
+                  src={
+                    img.imageUrl && img.imageUrl.startsWith("http")
+                      ? img.imageUrl
+                      : "/placeholder.jpg"
+                  }
                   className="rounded-xl"
                 />
               ))}

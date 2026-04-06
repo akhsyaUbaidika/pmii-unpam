@@ -1,48 +1,56 @@
 import prisma from "@/lib/prisma";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function DokumentasiPage() {
-  const docs = await prisma.documentation.findMany({
-    orderBy: { createdAt: "desc" },
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function DetailDokumentasi({ params }: Props) {
+  const { slug } = await params; // ← ini kunci penting
+
+  const doc = await prisma.documentation.findUnique({
+    where: { slug },
+    include: { images: true },
   });
 
+  if (!doc) return notFound();
+
   return (
-    <main className="bg-gray-50 min-h-screen pt-28 pb-20">
-      <div className="max-w-6xl mx-auto px-6">
-        
-        <h1 className="text-4xl font-bold text-blue-700">
-          Dokumentasi
-        </h1>
-        <p className="mt-2 text-gray-600">
-          Arsip kegiatan PMII Komisariat Universitas Pamulang
+    <main className="bg-white pt-28 pb-20">
+      <div className="max-w-4xl mx-auto px-6">
+
+        {/* COVER */}
+        <img
+          src={doc.coverImage}
+          className="rounded-2xl mb-8 w-full"
+        />
+
+        <h1 className="text-4xl font-bold">{doc.title}</h1>
+
+        <p className="mt-6 text-gray-700 leading-relaxed whitespace-pre-line">
+          {doc.content}
         </p>
 
-        {/* GRID */}
-        <div className="mt-10 grid md:grid-cols-3 gap-8">
-          {docs.map((doc) => (
-            <a
-              key={doc.id}
-              href={`/dokumentasi/${doc.slug}`}
-              className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden"
-            >
-              <img
-                src={doc.coverImage}
-                className="h-48 w-full object-cover"
-              />
+        {/* GALLERY */}
+        {doc.images.length > 0 && (
+          <>
+            <h2 className="text-2xl font-bold mt-12 mb-6">
+              Galeri Kegiatan
+            </h2>
 
-              <div className="p-5">
-                <h3 className="font-bold text-lg">
-                  {doc.title}
-                </h3>
-
-                <p className="text-sm text-gray-600 mt-2">
-                  {doc.excerpt}
-                </p>
-              </div>
-            </a>
-          ))}
-        </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {doc.images.map((img) => (
+                <img
+                  key={img.id}
+                  src={img.imageUrl}
+                  className="rounded-xl"
+                />
+              ))}
+            </div>
+          </>
+        )}
 
       </div>
     </main>
