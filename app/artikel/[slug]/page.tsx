@@ -1,18 +1,42 @@
-import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
-  params: Promise<{ slug: string }>;
+type Article = {
+  id: number;
+  title: string;
+  content: string;
+  image: string;
+  category: string;
+  slug: string;
 };
 
-export default async function DetailArtikel({ params }: Props) {
-  const { slug } = await params;
+type Props = {
+  params: { slug: string };
+};
 
-  const article = await prisma.article.findUnique({
-    where: { slug },
-  });
+async function getArticle(slug: string): Promise<Article | null> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/articles`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return null;
+
+    const articles: Article[] = await res.json();
+
+    return articles.find((item) => item.slug === slug) || null;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export default async function DetailArtikel({ params }: Props) {
+  const { slug } = params;
+
+  const article = await getArticle(slug);
 
   if (!article) return notFound();
 
@@ -20,10 +44,15 @@ export default async function DetailArtikel({ params }: Props) {
     <main className="bg-white pt-28 pb-20">
       <div className="max-w-3xl mx-auto px-6">
 
-        {/* COVER IMAGE */}
+        {/* IMAGE */}
         <img
-          src={article.image}
+          src={
+            article.image && article.image.startsWith("http")
+              ? article.image
+              : "/placeholder.jpg"
+          }
           className="rounded-2xl mb-8 w-full"
+          alt={article.title}
         />
 
         {/* TITLE */}
@@ -31,7 +60,7 @@ export default async function DetailArtikel({ params }: Props) {
           {article.title}
         </h1>
 
-        {/* CATEGORY BADGE */}
+        {/* CATEGORY */}
         <div className="mt-4">
           <span className="bg-yellow-400 text-black text-xs px-3 py-1 rounded-full font-semibold">
             {article.category}
@@ -40,7 +69,7 @@ export default async function DetailArtikel({ params }: Props) {
 
         {/* CONTENT */}
         <article className="mt-8 text-gray-700 leading-relaxed whitespace-pre-line text-lg">
-          {article.content}
+          {article.content || "Konten belum tersedia."}
         </article>
 
       </div>
