@@ -20,15 +20,13 @@ async function getArticle(slug: string): Promise<Article | null> {
   try {
     const host = (await headers()).get("host");
 
-    const res = await fetch(`https://${host}/api/articles`, {
+    const res = await fetch(`https://${host}/api/articles/${slug}`, {
       cache: "no-store",
     });
 
     if (!res.ok) return null;
 
-    const articles: Article[] = await res.json();
-
-    return articles.find((a) => a.slug === slug) || null;
+    return res.json();
   } catch (err) {
     console.error(err);
     return null;
@@ -45,27 +43,22 @@ export default async function DetailArtikel({ params }: Props) {
       <div className="max-w-3xl mx-auto px-6">
 
         <img
-          src={
-            article.image && article.image.startsWith("http")
-              ? article.image
-              : "/placeholder.jpg"
-          }
+          src={article.image || "/placeholder.jpg"}
           className="rounded-2xl mb-8 w-full"
-          alt={article.title}
         />
 
-        <h1 className="text-4xl font-bold leading-tight">
+        <h1 className="text-4xl font-bold">
           {article.title}
         </h1>
 
         <div className="mt-4">
-          <span className="bg-yellow-400 text-black text-xs px-3 py-1 rounded-full font-semibold">
+          <span className="bg-yellow-400 px-3 py-1 rounded-full text-xs font-semibold">
             {article.category}
           </span>
         </div>
 
-        <article className="mt-8 text-gray-700 leading-relaxed whitespace-pre-line text-lg">
-          {article.content || "Konten belum tersedia."}
+        <article className="mt-8 text-gray-700 whitespace-pre-line">
+          {article.content}
         </article>
 
       </div>

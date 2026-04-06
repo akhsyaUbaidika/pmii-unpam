@@ -3,37 +3,22 @@ import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-type Documentation = {
-  id: number;
-  title: string;
-  content: string;
-  coverImage: string;
-  slug: string;
-  images: {
-    id: number;
-    imageUrl: string;
-  }[];
-};
-
 type Props = {
   params: { slug: string };
 };
 
-async function getDoc(slug: string): Promise<Documentation | null> {
+async function getDoc(slug: string) {
   try {
     const host = (await headers()).get("host");
 
-    const res = await fetch(`https://${host}/api/documentations`, {
+    const res = await fetch(`https://${host}/api/documentations/${slug}`, {
       cache: "no-store",
     });
 
     if (!res.ok) return null;
 
-    const docs: Documentation[] = await res.json();
-
-    return docs.find((d) => d.slug === slug) || null;
-  } catch (err) {
-    console.error(err);
+    return res.json();
+  } catch {
     return null;
   }
 }
@@ -47,44 +32,27 @@ export default async function DetailDokumentasi({ params }: Props) {
     <main className="bg-white pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-6">
 
-        {/* COVER */}
         <img
-          src={
-            doc.coverImage && doc.coverImage.startsWith("http")
-              ? doc.coverImage
-              : "/placeholder.jpg"
-          }
+          src={doc.coverImage || "/placeholder.jpg"}
           className="rounded-2xl mb-8 w-full"
-          alt={doc.title}
         />
 
         <h1 className="text-4xl font-bold">{doc.title}</h1>
 
-        <p className="mt-6 text-gray-700 leading-relaxed whitespace-pre-line">
-          {doc.content || "Konten belum tersedia."}
+        <p className="mt-6 whitespace-pre-line">
+          {doc.content}
         </p>
 
-        {/* GALLERY */}
         {doc.images?.length > 0 && (
-          <>
-            <h2 className="text-2xl font-bold mt-12 mb-6">
-              Galeri Kegiatan
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {doc.images.map((img) => (
-                <img
-                  key={img.id}
-                  src={
-                    img.imageUrl && img.imageUrl.startsWith("http")
-                      ? img.imageUrl
-                      : "/placeholder.jpg"
-                  }
-                  className="rounded-xl"
-                />
-              ))}
-            </div>
-          </>
+          <div className="grid md:grid-cols-3 gap-6 mt-10">
+            {doc.images.map((img: any) => (
+              <img
+                key={img.id}
+                src={img.imageUrl || "/placeholder.jpg"}
+                className="rounded-xl"
+              />
+            ))}
+          </div>
         )}
 
       </div>
