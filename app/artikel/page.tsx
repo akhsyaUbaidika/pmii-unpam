@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -13,19 +14,21 @@ type Article = {
 
 async function getArticles(): Promise<Article[]> {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/articles`,
-      { cache: "no-store" }
-    );
+    // 🔥 ambil host dari request
+    const host = (await headers()).get("host");
+
+    const res = await fetch(`https://${host}/api/articles`, {
+      cache: "no-store",
+    });
 
     if (!res.ok) {
-      console.error("Failed fetch articles");
+      console.error("Fetch gagal:", res.status);
       return [];
     }
 
     return res.json();
   } catch (err) {
-    console.error("Fetch error:", err);
+    console.error("Error fetch:", err);
     return [];
   }
 }
