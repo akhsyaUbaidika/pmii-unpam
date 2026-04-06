@@ -6,30 +6,74 @@ type Props = {
   params: { slug: string };
 };
 
-async function getArticle(slug: string) {
+type Article = {
+  id: number;
+  title: string;
+  content: string;
+  image: string;
+  category: string;
+  slug: string;
+};
+
+async function getArticle(slug: string): Promise<Article | null> {
   try {
     const res = await fetch(`/api/articles/${slug}`, {
       cache: "no-store",
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error("Fetch article gagal:", res.status);
+      return null;
+    }
 
     return res.json();
   } catch (err) {
-    console.error(err);
+    console.error("Fetch error:", err);
     return null;
   }
 }
 
 export default async function DetailArtikel({ params }: Props) {
-  const article = await getArticle(params.slug);
+  const { slug } = params; // 🔥 WAJIB, JANGAN await
+
+  if (!slug) {
+    console.error("Slug undefined!");
+    return notFound();
+  }
+
+  const article = await getArticle(slug);
 
   if (!article) return notFound();
 
   return (
-    <div className="p-10">
-      <h1>{article.title}</h1>
-      <p>{article.content}</p>
-    </div>
+    <main className="bg-white pt-28 pb-20">
+      <div className="max-w-3xl mx-auto px-6">
+
+        <img
+          src={
+            article.image && article.image.startsWith("http")
+              ? article.image
+              : "/placeholder.jpg"
+          }
+          className="rounded-2xl mb-8 w-full"
+          alt={article.title}
+        />
+
+        <h1 className="text-4xl font-bold">
+          {article.title}
+        </h1>
+
+        <div className="mt-4">
+          <span className="bg-yellow-400 px-3 py-1 rounded-full text-xs font-semibold">
+            {article.category}
+          </span>
+        </div>
+
+        <article className="mt-8 text-gray-700 whitespace-pre-line">
+          {article.content}
+        </article>
+
+      </div>
+    </main>
   );
 }
