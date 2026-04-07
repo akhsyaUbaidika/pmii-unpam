@@ -1,8 +1,7 @@
-"use client";
-
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
+import DocumentationCarousel from "@/components/DocumentationCarousel";
 import "swiper/css";
 
 export const dynamic = "force-dynamic";
@@ -204,58 +203,7 @@ export default async function HomePage() {
       </section>
 
       {/* ================= DOKUMENTASI FULL HERO ================= */}
-      <section className="relative">
-
-        <Swiper
-          spaceBetween={0}
-          slidesPerView={1}
-          loop={true}
-          autoplay={{ delay: 4000 }}
-        >
-          {docs.map((doc) => (
-            <SwiperSlide key={doc.id}>
-              
-              <div className="relative h-[70vh] md:h-[80vh]">
-
-                {/* IMAGE */}
-                <img
-                  src={
-                    doc.coverImage?.startsWith("http")
-                      ? doc.coverImage
-                      : "/placeholder.jpg"
-                  }
-                  className="w-full h-full object-cover"
-                />
-
-                {/* OVERLAY */}
-                <div className="absolute inset-0 bg-black/60" />
-
-                {/* CONTENT */}
-                <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6">
-
-                  <h2 className="text-3xl md:text-5xl font-bold">
-                    Dokumentasi Kegiatan
-                  </h2>
-
-                  <p className="mt-4 max-w-2xl text-gray-200">
-                    Momen terbaik kader PMII dalam berbagai kegiatan dan pergerakan.
-                  </p>
-
-                  <Link href={`/dokumentasi/${doc.slug}`}>
-                    <button className="mt-6 px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-black transition">
-                      Lihat Selengkapnya
-                    </button>
-                  </Link>
-
-                </div>
-
-              </div>
-
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-      </section>
+      <DocumentationCarousel docs={docs} />
 
     </main>
   );
