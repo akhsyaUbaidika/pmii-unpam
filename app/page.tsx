@@ -67,7 +67,7 @@ export default async function HomePage() {
             </p>
 
             <h1 className="text-4xl md:text-5xl font-extrabold mt-4 leading-tight">
-              PMII Ciputat
+              PMII Komisariat Universitas Pamulang
             </h1>
 
             <p className="mt-4 text-blue-100">
