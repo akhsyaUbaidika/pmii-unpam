@@ -1,5 +1,9 @@
+"use client";
+
 import { headers } from "next/headers";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 export const dynamic = "force-dynamic";
 
@@ -199,38 +203,58 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= DOKUMENTASI ================= */}
-      <section className="py-20 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
+      {/* ================= DOKUMENTASI FULL HERO ================= */}
+      <section className="relative">
 
-          <h3 className="text-3xl font-bold text-center">
-            Dokumentasi
-          </h3>
+        <Swiper
+          spaceBetween={0}
+          slidesPerView={1}
+          loop={true}
+          autoplay={{ delay: 4000 }}
+        >
+          {docs.map((doc) => (
+            <SwiperSlide key={doc.id}>
+              
+              <div className="relative h-[70vh] md:h-[80vh]">
 
-          <div className="mt-10 grid md:grid-cols-3 gap-6">
-
-            {docs.length === 0 && (
-              <p className="text-center text-gray-500 col-span-3">
-                Belum ada dokumentasi
-              </p>
-            )}
-
-            {docs.slice(0, 3).map((doc) => (
-              <Link key={doc.id} href={`/dokumentasi/${doc.slug}`}>
+                {/* IMAGE */}
                 <img
                   src={
                     doc.coverImage?.startsWith("http")
                       ? doc.coverImage
                       : "/placeholder.jpg"
                   }
-                  className="w-full h-48 object-cover rounded-xl hover:scale-105 transition"
+                  className="w-full h-full object-cover"
                 />
-              </Link>
-            ))}
 
-          </div>
+                {/* OVERLAY */}
+                <div className="absolute inset-0 bg-black/60" />
 
-        </div>
+                {/* CONTENT */}
+                <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6">
+
+                  <h2 className="text-3xl md:text-5xl font-bold">
+                    Dokumentasi Kegiatan
+                  </h2>
+
+                  <p className="mt-4 max-w-2xl text-gray-200">
+                    Momen terbaik kader PMII dalam berbagai kegiatan dan pergerakan.
+                  </p>
+
+                  <Link href={`/dokumentasi/${doc.slug}`}>
+                    <button className="mt-6 px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-black transition">
+                      Lihat Selengkapnya
+                    </button>
+                  </Link>
+
+                </div>
+
+              </div>
+
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
       </section>
 
     </main>
