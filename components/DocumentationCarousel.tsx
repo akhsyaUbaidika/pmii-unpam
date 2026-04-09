@@ -10,8 +10,14 @@ import Link from "next/link";
 
 export default function DocumentationCarousel({ docs }: any) {
   return (
-    <section className="relative">
-      <Swiper loop autoplay={{ delay: 4000 }}>
+    <section className="relative w-full">
+      <Swiper
+        modules={[Navigation, Autoplay, Pagination]}
+        navigation
+        pagination={{ clickable: true }}
+        loop
+        autoplay={{ delay: 4000 }}
+      >
         {docs.map((doc: any) => (
           <SwiperSlide key={doc.id}>
             <div className="relative h-[70vh]">
@@ -21,7 +27,7 @@ export default function DocumentationCarousel({ docs }: any) {
                 className="w-full h-full object-cover"
               />
 
-              <div className="absolute inset-0 bg-black/60" />
+              <div className="absolute inset-0 bg-black/60 pointer-events-none" />
 
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center px-6">
 
