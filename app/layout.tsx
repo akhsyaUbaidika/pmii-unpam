@@ -40,6 +40,7 @@ export default function RootLayout({
                 <li><a href="/profil/struktur">Struktur</a></li>
                 <li><a href="/artikel">Artikel</a></li>
                 <li><a href="/dokumentasi">Dokumentasi</a></li>
+                <li><a href="/pengajuan-sk">Pengajuan SK Rayon</a></li>
               </ul>
             </div>
 
