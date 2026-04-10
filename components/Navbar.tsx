@@ -21,12 +21,27 @@ export default function Navbar() {
           <Link href="/">Beranda</Link>
 
           {/* DROPDOWN PROFIL */}
-          <div className="relative group">
-            <button className="hover:text-blue-600">
+          <div
+            className="relative group"
+            onMouseEnter={() => setProfilOpen(true)}
+            onMouseLeave={() => setProfilOpen(false)}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setProfilOpen(!profilOpen);
+              }}
+              className="hover:text-blue-600"
+            >
               Profil ▾
             </button>
 
-            <div className="absolute hidden group-hover:block bg-white shadow rounded mt-2 w-40">
+            <div
+              className={`
+                absolute bg-white shadow rounded mt-2 w-40
+                ${profilOpen ? "block" : "hidden"}
+              `}
+            >
               <Link href="/profil/sejarah" className="block px-4 py-2 hover:bg-gray-100">
                 Sejarah
               </Link>
