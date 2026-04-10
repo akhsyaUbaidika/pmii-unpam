@@ -1,5 +1,5 @@
 const pengurus = [
-  { nama: "M. Yusuf Febrio", jabatan: "Ketua Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567832296.jpeg"},
+  { nama: "M. Yusuf Febrio", jabatan: "Ketua Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/aten.png"},
   { nama: "Adi Hidayat", jabatan: "Sekretaris Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567857015.jpeg" },
   { nama: "Muhana Aydin", jabatan: "Bendahara Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567867111.jpeg" },
   { nama: "Fahmi AL-Ahyar", jabatan: "Ketua Bidang 1", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567894028.jpeg" },
