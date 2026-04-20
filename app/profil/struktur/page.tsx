@@ -152,10 +152,10 @@ export default function StrukturPage() {
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl max-w-sm w-full overflow-hidden animate-scaleIn"
+            className="bg-white rounded-2xl shadow-xl w-full max-w-[280px] sm:max-w-[300px] overflow-hidden animate-scaleIn"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-full h-[320px]">
+            <div className="w-full aspect-[4/5]">
               <img
                 src={selected.img || "/default-user.png"}
                 alt={selected.nama}
