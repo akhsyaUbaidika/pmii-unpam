@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
+import BackButton from "@/components/BackButton";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,8 @@ export default async function DetailArtikel({ params }: Props) {
   return (
     <main className="bg-white pt-28 pb-20">
       <div className="max-w-3xl mx-auto px-6">
+
+        <BackButton />
 
         <img
           src={
