@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 const pengurus = [
   {
     nama: "M. Yusuf Febrio",
@@ -92,16 +90,15 @@ const pengurus = [
 function Card({ p }: { p: any }) {
   return (
     <div
-      onClick={() => alert(p.nama)}
-      className="bg-white rounded-2xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
+      onClick={() => console.log(p)}
+      className="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition duration-300 cursor-pointer overflow-hidden"
     >
       {/* IMAGE */}
-      <div className="relative w-full h-[320px]">
-        <Image
+      <div className="w-full h-[260px] md:h-[280px] overflow-hidden">
+        <img
           src={p.img || "/default-user.png"}
           alt={p.nama}
-          fill
-          className="object-cover object-center"
+          className="w-full h-full object-cover object-center"
         />
       </div>
 
@@ -134,7 +131,7 @@ export default function StrukturPage() {
         </div>
 
         {/* ROW NEXT - 3 CARD */}
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
           {rest.map((p, i) => (
             <Card key={i} p={p} />
           ))}
