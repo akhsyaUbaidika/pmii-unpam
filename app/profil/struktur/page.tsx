@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 const pengurus = [
   {
     nama: "M. Yusuf Febrio",
@@ -87,11 +89,11 @@ const pengurus = [
   },
 ];
 
-function Card({ p }: { p: any }) {
+function Card({ p, onClick }: { p: any; onClick: (p: any) => void }) {
   return (
     <div
-      onClick={() => console.log(p)}
-      className="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition duration-300 cursor-pointer overflow-hidden"
+      onClick={() => onClick(p)}
+      className="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.03] transition duration-300 cursor-pointer overflow-hidden"
     >
       {/* IMAGE */}
       <div className="w-full h-[260px] md:h-[280px] overflow-hidden">
@@ -103,15 +105,19 @@ function Card({ p }: { p: any }) {
       </div>
 
       {/* TEXT */}
-      <div className="p-4 text-center">
-        <h3 className="font-semibold text-lg">{p.nama}</h3>
-        <p className="text-gray-500 text-sm">{p.jabatan}</p>
+      <div className="p-4 text-center bg-yellow-100/60">
+        <h3 className="font-semibold text-lg text-gray-900">
+          {p.nama}
+        </h3>
+        <p className="text-gray-700 text-sm">{p.jabatan}</p>
       </div>
     </div>
   );
 }
 
 export default function StrukturPage() {
+  const [selected, setSelected] = useState<any>(null);
+
   const topRow = pengurus.slice(0, 4);
   const rest = pengurus.slice(4);
 
@@ -123,21 +129,68 @@ export default function StrukturPage() {
           Struktur Pengurus Komisariat
         </h1>
 
-        {/* ROW 1 - 4 CARD */}
+        {/* ROW 1 - 4 */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
           {topRow.map((p, i) => (
-            <Card key={i} p={p} />
+            <Card key={i} p={p} onClick={setSelected} />
           ))}
         </div>
 
-        {/* ROW NEXT - 3 CARD */}
+        {/* ROW NEXT */}
         <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
           {rest.map((p, i) => (
-            <Card key={i} p={p} />
+            <Card key={i} p={p} onClick={setSelected} />
           ))}
         </div>
 
       </div>
+
+      {/* MODAL */}
+      {selected && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-sm w-full overflow-hidden animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-full h-[320px]">
+              <img
+                src={selected.img || "/default-user.png"}
+                alt={selected.nama}
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
+
+            <div className="p-5 text-center bg-yellow-100/60">
+              <h3 className="text-xl font-semibold text-gray-900">
+                {selected.nama}
+              </h3>
+              <p className="text-gray-700">
+                {selected.jabatan}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ANIMATION */}
+      <style jsx>{`
+        .animate-scaleIn {
+          animation: scaleIn 0.2s ease;
+        }
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </section>
   );
 }
