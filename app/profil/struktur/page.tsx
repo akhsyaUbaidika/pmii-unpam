@@ -1,63 +1,143 @@
+"use client";
+
+import Image from "next/image";
+
 const pengurus = [
-  { nama: "M. Yusuf Febrio", jabatan: "Ketua Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/aten.png"},
-  { nama: "Muhana Aydin", jabatan: "Sekretaris Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567867111.jpeg" },
-  { nama: "Adi Hidayat", jabatan: "Bendahara Umum", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567857015.jpeg" },
-  { nama: "Fahmi AL-Ahyar", jabatan: "Ketua Bidang 1", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567894028.jpeg" },
-  { nama: "Haris", jabatan: "Ketua Bidang 2", ig: "#", img:"" },
-  { nama: "Masyhuril Pranata", jabatan: "Ketua Bidang 3", ig: "#", img:"https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1775567907028.jpeg" },
+  {
+    nama: "M. Yusuf Febrio",
+    jabatan: "Ketua Umum",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur1.webp",
+  },
+  {
+    nama: "Muhana Aydin",
+    jabatan: "Sekretaris Umum",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur2.webp",
+  },
+  {
+    nama: "Adi Hidayat",
+    jabatan: "Bendahara Umum",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur3.webp",
+  },
+  {
+    nama: "Alis Lisnawati",
+    jabatan: "Wakil Bendahara",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur4.webp",
+  },
+  {
+    nama: "Fahmi AL-Ahyar",
+    jabatan: "Ketua Bidang 1",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur5.webp",
+  },
+  {
+    nama: "Haris",
+    jabatan: "Ketua Bidang 2",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/default-user.webp",
+  },
+  {
+    nama: "Masyhuril Pranata",
+    jabatan: "Ketua Bidang 3",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur7.webp",
+  },
+  {
+    nama: "M. Nurul Faqih",
+    jabatan: "Sekretaris Bidang 1",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur8.webp",
+  },
+  {
+    nama: "Berliana Silvia",
+    jabatan: "Sekretaris Bidang 2",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur9.webp",
+  },
+  {
+    nama: "Muhamad Azharudin",
+    jabatan: "Sekretaris Bidang 3",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur10.webp",
+  },
+  {
+    nama: "Akhsya Ubaidika Elghozi",
+    jabatan: "Kepala Biro Kaderisasi",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur11.webp",
+  },
+  {
+    nama: "Hafizah Arasya",
+    jabatan: "Kepala Biro KOMDIGI",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur11.webp",
+  },
+  {
+    nama: "Hadriansyah",
+    jabatan: "Kepala Biro Keagamaan",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/default-user.webp",
+  },
+  {
+    nama: "Akhmad Alvi Sahri",
+    jabatan: "Kepala Biro K3",
+    ig: "#",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/default-user.webp",
+  },
 ];
 
-export default function StrukturPage() {
+function Card({ p }: { p: any }) {
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
+    <div
+      onClick={() => alert(p.nama)}
+      className="bg-white rounded-2xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
+    >
+      {/* IMAGE */}
+      <div className="relative w-full h-[320px]">
+        <Image
+          src={p.img || "/default-user.png"}
+          alt={p.nama}
+          fill
+          className="object-cover object-center"
+        />
+      </div>
+
+      {/* TEXT */}
+      <div className="p-4 text-center">
+        <h3 className="font-semibold text-lg">{p.nama}</h3>
+        <p className="text-gray-500 text-sm">{p.jabatan}</p>
+      </div>
+    </div>
+  );
+}
+
+export default function StrukturPage() {
+  const topRow = pengurus.slice(0, 4);
+  const rest = pengurus.slice(4);
+
+  return (
+    <section className="py-20 bg-gray-50 min-h-screen">
+      <div className="max-w-5xl mx-auto px-6">
 
         <h1 className="text-4xl font-bold text-center">
           Struktur Pengurus Komisariat
         </h1>
 
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
-
-          {pengurus.map((p, i) => (
-            <div key={i} className="relative group overflow-hidden rounded-2xl shadow">
-              
-              {/* FOTO */}
-              <div className="h-80 overflow-hidden">
-                {p.img ? (
-                  <img 
-                    src={p.img} 
-                    alt={p.nama}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-300"></div>
-                )}
-              </div>
-
-              {/* OVERLAY HOVER */}
-              <div 
-                className="absolute inset-0 bg-blue-700/90 
-                          flex flex-col items-center justify-center
-                          text-white opacity-0 group-hover:opacity-100 
-                          transition-opacity duration-300"
-              >
-
-                <h3 className="text-xl font-bold">{p.nama}</h3>
-                <p className="text-blue-200">{p.jabatan}</p>
-
-                <a 
-                  href={p.ig}
-                  target="_blank"
-                  className="mt-4 bg-white text-blue-700 px-4 py-2 rounded-full text-sm font-semibold"
-                >
-                  Instagram
-                </a>
-
-              </div>
-
-            </div>
+        {/* ROW 1 - 4 CARD */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {topRow.map((p, i) => (
+            <Card key={i} p={p} />
           ))}
+        </div>
 
+        {/* ROW NEXT - 3 CARD */}
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-6">
+          {rest.map((p, i) => (
+            <Card key={i} p={p} />
+          ))}
         </div>
 
       </div>
