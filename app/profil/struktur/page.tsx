@@ -71,7 +71,7 @@ const pengurus = [
     nama: "Hafizah Arasya",
     jabatan: "Kepala Biro KOMDIGI",
     ig: "#",
-    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur11.webp",
+    img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur12.webp",
   },
   {
     nama: "Hadriansyah",
