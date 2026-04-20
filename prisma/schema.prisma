@@ -23,6 +23,8 @@ model Article {
   content   String   @db.Text
   image     String
   category  String
+  authorName  String   @default("Admin")
+  publishedAt DateTime @default(now())
   createdAt DateTime @default(now())
 }
 

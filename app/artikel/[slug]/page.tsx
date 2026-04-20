@@ -14,6 +14,8 @@ type Article = {
   image: string;
   category: string;
   slug: string;
+  authorName: string;
+  publishedAt: string;
 };
 
 async function getArticle(slug: string): Promise<Article | null> {
@@ -72,6 +74,10 @@ export default async function DetailArtikel({ params }: Props) {
         <h1 className="text-4xl font-bold">
           {article.title}
         </h1>
+        <p className="text-sm text-gray-500 mt-2">
+          Oleh {article.authorName} •{" "}
+          {new Date(article.publishedAt).toLocaleDateString("id-ID")}
+        </p>
 
         <div className="mt-4">
           <span className="bg-yellow-400 px-3 py-1 rounded-full text-xs font-semibold">

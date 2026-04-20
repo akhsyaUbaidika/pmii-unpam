@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { verifyToken, getTokenFromHeader } from "@/lib/auth";
 
-// GET ALL ARTICLES (Public)
+// GET ALL ARTICLES
 export async function GET() {
   try {
     const articles = await prisma.article.findMany({
@@ -19,7 +19,7 @@ export async function GET() {
   }
 }
 
-// CREATE ARTICLE (Protected)
+// CREATE ARTICLE
 export async function POST(req: Request) {
   try {
     const token = getTokenFromHeader(req);
@@ -54,7 +54,6 @@ export async function POST(req: Request) {
       .trim()
       .replace(/\s+/g, "-");
 
-    // ✅ Cek slug unik
     const existing = await prisma.article.findUnique({
       where: { slug },
     });
@@ -73,7 +72,11 @@ export async function POST(req: Request) {
         excerpt: body.excerpt ?? "",
         content: body.content,
         image: body.image ?? "",
-        category: body.category ?? "Umum",
+        category: body.category ?? "Opini",
+
+        // ✅ NEW
+        authorName: body.author ?? "Admin",
+        publishedAt: new Date(),
       },
     });
 

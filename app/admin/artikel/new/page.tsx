@@ -13,13 +13,17 @@ export default function CreateArtikelPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+
+  // ✅ NEW
+  const [category, setCategory] = useState("Opini");
+  const [author, setAuthor] = useState("Admin");
+
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit() {
     try {
       setLoading(true);
 
-      // ❗ validasi sederhana
       if (!title || !content) {
         alert("Judul dan konten wajib diisi");
         setLoading(false);
@@ -37,7 +41,8 @@ export default function CreateArtikelPage() {
           excerpt,
           content,
           image: imageUrl,
-          category: "Opini",
+          category,
+          author,
         }),
       });
 
@@ -51,7 +56,6 @@ export default function CreateArtikelPage() {
 
       alert("Artikel berhasil dibuat!");
 
-      // reset form
       setTitle("");
       setExcerpt("");
       setContent("");
@@ -71,7 +75,6 @@ export default function CreateArtikelPage() {
 
       <div className="bg-white p-6 rounded shadow space-y-4">
 
-        {/* TITLE */}
         <input
           className="border p-2 w-full rounded"
           placeholder="Judul Artikel"
@@ -79,7 +82,6 @@ export default function CreateArtikelPage() {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        {/* EXCERPT */}
         <textarea
           className="border p-2 w-full rounded"
           placeholder="Ringkasan (excerpt)"
@@ -87,7 +89,33 @@ export default function CreateArtikelPage() {
           onChange={(e) => setExcerpt(e.target.value)}
         />
 
-        {/* CONTENT */}
+        {/* ✅ CATEGORY */}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border p-2 w-full rounded"
+        >
+          <option>Opini</option>
+          <option>Berita</option>
+          <option>Karya Tulis Ilmiah</option>
+          <option>Sastra</option>
+          <option>Refleksi</option>
+          <option>Kajian</option>
+          <option>Tokoh & Inspirasi</option>
+        </select>
+
+        {/* ✅ AUTHOR */}
+        <select
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          className="border p-2 w-full rounded"
+        >
+          <option>Admin</option>
+          <option>Mas Asa</option>
+          <option>Tim Redaksi</option>
+          <option>Guest Writer</option>
+        </select>
+
         <textarea
           className="border p-2 w-full rounded h-40"
           placeholder="Isi artikel..."
@@ -95,7 +123,6 @@ export default function CreateArtikelPage() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        {/* IMAGE UPLOAD */}
         <div>
           <p className="text-sm text-gray-500 mb-2">Upload Gambar</p>
 
@@ -112,7 +139,6 @@ export default function CreateArtikelPage() {
           )}
         </div>
 
-        {/* SUBMIT */}
         <button
           onClick={handleSubmit}
           disabled={loading}
