@@ -92,7 +92,7 @@ export default async function DetailArtikel({ params }: Props) {
           </span>
         </div>
 
-        <article className="mt-8 text-gray-700 whitespace-pre-line">
+        <article className="mt-8 text-gray-700 whitespace-pre-line text-justify">
           {article.content}
         </article>
 
