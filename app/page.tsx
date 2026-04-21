@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 type Article = {
   id: number;
   title: string;
+  category: string;
   excerpt: string;
   image: string;
   slug: string;
@@ -182,7 +183,7 @@ export default async function HomePage() {
                     />
 
                     <div className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-2 py-1 rounded">
-                      Opini
+                      {item.category}
                     </div>
                   </div>
 

@@ -11,6 +11,7 @@ type Props = {
 type Article = {
   id: number;
   title: string;
+  excerpt: string;
   content: string;
   image: string;
   category: string;
@@ -77,6 +78,9 @@ export default async function DetailArtikel({ params }: Props) {
         <h1 className="text-4xl font-bold">
           {article.title}
         </h1>
+        <h2 className="text-3xl">
+          {article.excerpt}
+        </h2>
         <p className="text-sm text-gray-500 mt-2">
           Oleh {article.authorName} •{" "}
           {new Date(article.publishedAt).toLocaleDateString("id-ID")}
