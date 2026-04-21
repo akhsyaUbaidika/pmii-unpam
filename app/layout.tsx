@@ -14,6 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
+      <head>
+        <link rel="icon" href="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/title.ico" />
+      </head>
       <body className="bg-gray-50 text-gray-900">
 
         <Navbar />

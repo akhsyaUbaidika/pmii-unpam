@@ -78,7 +78,7 @@ export default async function DetailArtikel({ params }: Props) {
         <h1 className="text-4xl font-bold">
           {article.title}
         </h1>
-        <h2 className="text-3xl">
+        <h2 className="text-3xl text-gray-500 mt-2">
           {article.excerpt}
         </h2>
         <p className="text-sm text-gray-500 mt-2">
