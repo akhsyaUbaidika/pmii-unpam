@@ -5,6 +5,17 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   title: "PMII Komisariat Universitas Pamulang",
   description: "Website resmi PMII Komisariat Universitas Pamulang",
+  openGraph: {
+    type: "website",
+    url: "https://pmiiunpam.com/",
+    title: "PMII UNPAM",
+    description: "Website resmi PMII Komisariat Universitas Pamulang",
+    images: [
+      {
+        url: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

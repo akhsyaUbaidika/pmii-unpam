@@ -1,6 +1,47 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import BackButton from "@/components/BackButton";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  const host = "https://pmiiunpam.com";
+
+  try {
+    const res = await fetch(`${host}/api/documentations/${slug}`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return {
+        title: "Dokumentasi tidak ditemukan",
+      };
+    }
+
+    const doc = await res.json();
+
+    return {
+      title: doc.title,
+      description:
+        doc.content?.slice(0, 150) || "Dokumentasi kegiatan PMII UNPAM",
+      openGraph: {
+        title: doc.title,
+        description: doc.content?.slice(0, 150),
+        url: `${host}/dokumentasi/${slug}`,
+        images: [
+          {
+            url: doc.coverImage,
+          },
+        ],
+      },
+    };
+  } catch {
+    return {
+      title: "Error",
+    };
+  }
+}
 
 export const dynamic = "force-dynamic";
 

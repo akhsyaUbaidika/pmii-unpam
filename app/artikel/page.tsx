@@ -3,6 +3,21 @@ import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Artikel PMII UNPAM",
+  description: "Kumpulan artikel kader PMII UNPAM",
+  openGraph: {
+    title: "Artikel PMII UNPAM",
+    description: "Kumpulan artikel kader PMII UNPAM",
+    url: "https://pmiiunpam.com/artikel",
+    images: [
+      {
+        url: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp",
+      },
+    ],
+  },
+};
+
 type Article = {
   id: number;
   title: string;

@@ -3,6 +3,21 @@ import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Dokumentasi PMII UNPAM",
+  description: "Kumpulan dokumentasi kegiatan PMII UNPAM",
+  openGraph: {
+    title: "Dokumentasi PMII UNPAM",
+    description: "Kumpulan dokumentasi kegiatan PMII UNPAM",
+    url: "https://pmiiunpam.com/dokumentasi",
+    images: [
+      {
+        url: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp",
+      },
+    ],
+  },
+};
+
 type Documentation = {
   id: number;
   title: string;
@@ -37,7 +52,7 @@ export default async function DokumentasiPage() {
   return (
     <main className="bg-gray-50 min-h-screen pt-28 pb-20">
       <div className="max-w-6xl mx-auto px-6">
-        
+
         {/* HEADER */}
         <h1 className="text-4xl font-bold text-blue-700">
           Dokumentasi

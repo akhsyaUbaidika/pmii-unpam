@@ -1,6 +1,46 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import BackButton from "@/components/BackButton";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  const host = "https://pmiiunpam.com";
+
+  try {
+    const res = await fetch(`${host}/api/articles/${slug}`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return {
+        title: "Artikel tidak ditemukan",
+      };
+    }
+
+    const article = await res.json();
+
+    return {
+      title: article.title,
+      description: article.excerpt,
+      openGraph: {
+        title: article.title,
+        description: article.excerpt,
+        url: `${host}/artikel/${slug}`,
+        images: [
+          {
+            url: article.image,
+          },
+        ],
+      },
+    };
+  } catch {
+    return {
+      title: "Error",
+    };
+  }
+}
 
 export const dynamic = "force-dynamic";
 
