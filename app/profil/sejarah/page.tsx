@@ -1,3 +1,18 @@
+export const metadata = {
+  title: "Sejarah PMII",
+  description: "Sejarah Berdirinya PMII",
+  openGraph: {
+    title: "Sejarah PMII",
+    description: "Sejarah Berdirinya PMII",
+    url: "https://pmiiunpam.com/profil/sejarah",
+    images: [
+      {
+        url: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp",
+      },
+    ],
+  },
+};
+
 export default function SejarahPage() {
   return (
     <section className="py-20 bg-gray-50">
