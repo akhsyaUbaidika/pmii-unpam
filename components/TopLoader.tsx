@@ -7,7 +7,6 @@ import "nprogress/nprogress.css";
 
 export default function TopLoader() {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
 
     useEffect(() => {
         NProgress.start();
@@ -17,7 +16,7 @@ export default function TopLoader() {
         }, 300); // biar ga flicker
 
         return () => clearTimeout(timer);
-    }, [pathname, searchParams]);
+    }, [pathname]);
 
     return null;
 }
