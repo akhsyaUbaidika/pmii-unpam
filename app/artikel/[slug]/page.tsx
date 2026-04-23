@@ -71,7 +71,8 @@ async function getArticle(slug: string): Promise<Article | null> {
     }
 
     const res = await fetch(`https://${host}/api/articles/${slug}`, {
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 60 }
     });
 
     if (!res.ok) {

@@ -27,7 +27,8 @@ async function getArticles(): Promise<Article[]> {
 
   try {
     const res = await fetch(`https://${host}/api/articles`, {
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 60 }
     });
 
     if (!res.ok) return [];
@@ -42,7 +43,8 @@ async function getDocs(): Promise<Doc[]> {
 
   try {
     const res = await fetch(`https://${host}/api/documentations`, {
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 60 }
     });
 
     if (!res.ok) return [];

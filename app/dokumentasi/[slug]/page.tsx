@@ -72,7 +72,8 @@ async function getDoc(slug: string): Promise<Documentation | null> {
     }
 
     const res = await fetch(`https://${host}/api/documentations/${slug}`, {
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 60 }
     });
 
     if (!res.ok) {

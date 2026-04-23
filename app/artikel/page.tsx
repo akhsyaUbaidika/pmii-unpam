@@ -34,7 +34,8 @@ async function getArticles(): Promise<Article[]> {
     const host = (await headers()).get("host");
 
     const res = await fetch(`https://${host}/api/articles`, {
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 60 }
     });
 
     if (!res.ok) {
