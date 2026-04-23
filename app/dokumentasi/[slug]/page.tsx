@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import BackButton from "@/components/BackButton";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -106,7 +107,7 @@ export default async function DetailDokumentasi({ params }: Props) {
 
         <BackButton />
 
-        <img
+        {/* <img
           src={
             doc.coverImage && doc.coverImage.startsWith("http")
               ? doc.coverImage
@@ -114,6 +115,18 @@ export default async function DetailDokumentasi({ params }: Props) {
           }
           className="rounded-2xl mb-8 w-full"
           alt={doc.title}
+        /> */}
+
+        <Image
+          src={
+            doc.coverImage && doc.coverImage.startsWith("http")
+              ? doc.coverImage
+              : "/placeholder.jpg"
+          }
+          alt={doc.title}
+          width={800}
+          height={500}
+          className="rounded-2xl mb-8 w-full object-cover"
         />
 
         <h1 className="text-4xl font-bold">
@@ -132,14 +145,26 @@ export default async function DetailDokumentasi({ params }: Props) {
 
             <div className="grid md:grid-cols-3 gap-6">
               {doc.images.map((img) => (
-                <img
+                // <img
+                //   key={img.id}
+                //   src={
+                //     img.imageUrl && img.imageUrl.startsWith("http")
+                //       ? img.imageUrl
+                //       : "/placeholder.jpg"
+                //   }
+                //   className="rounded-xl"
+                // />
+                <Image
                   key={img.id}
                   src={
                     img.imageUrl && img.imageUrl.startsWith("http")
                       ? img.imageUrl
                       : "/placeholder.jpg"
                   }
-                  className="rounded-xl"
+                  alt="Dokumentasi kegiatan"
+                  width={400}
+                  height={300}
+                  className="rounded-xl object-cover"
                 />
               ))}
             </div>

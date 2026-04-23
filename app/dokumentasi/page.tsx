@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,7 @@ export default async function DokumentasiPage() {
                 className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden"
               >
                 {/* IMAGE */}
-                <img
+                {/* <img
                   src={
                     doc.coverImage && doc.coverImage.startsWith("http")
                       ? doc.coverImage
@@ -85,6 +86,18 @@ export default async function DokumentasiPage() {
                   }
                   className="h-48 w-full object-cover"
                   alt={doc.title}
+                /> */}
+
+                <Image
+                  src={
+                    doc.coverImage && doc.coverImage.startsWith("http")
+                      ? doc.coverImage
+                      : "/placeholder.jpg"
+                  }
+                  alt={doc.title}
+                  width={500}
+                  height={300}
+                  className="h-48 w-full object-cover"
                 />
 
                 {/* CONTENT */}
