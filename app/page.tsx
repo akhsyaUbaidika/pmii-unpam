@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import DocumentationCarousel from "@/components/DocumentationCarousel";
 import "swiper/css";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -83,10 +84,18 @@ export default async function HomePage() {
           </div>
 
           <div className="flex justify-center">
-            <img
+            {/* <img
               src="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp"
               className="w-80 drop-shadow-2xl"
               alt="PMII"
+            /> */}
+            <Image
+              src="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776794780855.webp"
+              alt="PMII"
+              width={320}
+              height={320}
+              className="w-80 drop-shadow-2xl"
+              priority
             />
           </div>
 
@@ -172,7 +181,7 @@ export default async function HomePage() {
                 <div className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
 
                   <div className="relative">
-                    <img
+                    {/* <img
                       src={
                         item.image?.startsWith("http")
                           ? item.image
@@ -180,8 +189,19 @@ export default async function HomePage() {
                       }
                       className="h-44 w-full object-cover"
                       alt={item.title}
-                    />
+                    /> */}
 
+                    <Image
+                      src={
+                        item.image?.startsWith("http")
+                          ? item.image
+                          : "/placeholder.jpg"
+                      }
+                      alt={item.title}
+                      width={500}
+                      height={300}
+                      className="h-44 w-full object-cover"
+                    />
                     <div className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                       {item.category}
                     </div>
