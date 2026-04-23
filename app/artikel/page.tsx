@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,7 @@ export default async function ArtikelPage() {
                 href={`/artikel/${item.slug}`}
                 className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden block"
               >
-                <img
+                {/* <img
                   src={
                     item.image && item.image.startsWith("http")
                       ? item.image
@@ -76,6 +77,18 @@ export default async function ArtikelPage() {
                   }
                   className="h-48 w-full object-cover"
                   alt={item.title}
+                /> */}
+
+                <Image
+                  src={
+                    item.image && item.image.startsWith("http")
+                      ? item.image
+                      : "/placeholder.jpg"
+                  }
+                  alt={item.title}
+                  width={500}
+                  height={300}
+                  className="h-48 w-full object-cover"
                 />
 
                 <div className="p-5">

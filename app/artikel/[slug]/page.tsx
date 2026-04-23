@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import BackButton from "@/components/BackButton";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -105,7 +106,7 @@ export default async function DetailArtikel({ params }: Props) {
 
         <BackButton />
 
-        <img
+        {/* <img
           src={
             article.image && article.image.startsWith("http")
               ? article.image
@@ -113,6 +114,18 @@ export default async function DetailArtikel({ params }: Props) {
           }
           className="rounded-2xl mb-8 w-full"
           alt={article.title}
+        /> */}
+
+        <Image
+          src={
+            article.image && article.image.startsWith("http")
+              ? article.image
+              : "/placeholder.jpg"
+          }
+          alt={article.title}
+          width={800}
+          height={500}
+          className="rounded-2xl mb-8 w-full"
         />
 
         <h1 className="text-4xl font-bold">
