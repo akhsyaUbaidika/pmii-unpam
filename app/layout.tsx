@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import TopLoader from "@/components/TopLoader";
 
 export const metadata: Metadata = {
   title: "PMII Komisariat Universitas Pamulang",
@@ -29,6 +30,8 @@ export default function RootLayout({
         <link rel="icon" href="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/title.ico" />
       </head>
       <body className="bg-gray-50 text-gray-900">
+
+        <TopLoader />
 
         <Navbar />
 
