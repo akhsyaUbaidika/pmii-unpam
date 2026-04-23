@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const metadata = {
   title: "Sejarah PMII",
   description: "Sejarah Berdirinya PMII",
@@ -41,8 +43,11 @@ export default function SejarahPage() {
 
         {/* GAMBAR */}
         <div className="flex justify-center">
-          <img
+          <Image
             src="https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/1776857758133.webp"
+            alt="Sejarah PMII"
+            width={288}
+            height={288}
             className="w-72 drop-shadow-xl"
           />
         </div>
