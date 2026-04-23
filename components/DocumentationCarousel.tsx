@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function DocumentationCarousel({ docs }: any) {
   return (
@@ -22,9 +23,17 @@ export default function DocumentationCarousel({ docs }: any) {
           <SwiperSlide key={doc.id}>
             <div className="relative h-[70vh]">
 
-              <img
+              {/* <img
                 src={doc.coverImage}
                 className="w-full h-full object-cover"
+              /> */}
+
+              <Image
+                src={doc.coverImage}
+                alt="Dokumentasi"
+                fill
+                className="object-cover"
+                priority={doc.id === docs[0]?.id}
               />
 
               <div className="absolute inset-0 bg-black/60 pointer-events-none" />
