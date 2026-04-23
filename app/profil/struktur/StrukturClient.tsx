@@ -96,21 +96,28 @@ function Card({ p, onClick }: { p: any; onClick: (p: any) => void }) {
             className="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.03] transition duration-300 cursor-pointer overflow-hidden"
         >
             {/* IMAGE */}
-            {/* <div className="w-full h-[260px] md:h-[280px] overflow-hidden">
-                <img
+            <div className="w-full h-[260px] md:h-[280px] overflow-hidden">
+                {/* <img
                     src={p.img || "/default-user.png"}
                     alt={p.nama}
                     className="w-full h-full object-cover object-center"
+                /> */}
+                <Image
+                    src={p.img || "/default-user.png"}
+                    alt={p.nama}
+                    width={300}
+                    height={400}
+                    className="w-full h-full object-cover object-center"
                 />
-            </div> */}
-            <div className="w-full h-[260px] md:h-[280px] overflow-hidden relative">
+            </div>
+            {/* <div className="w-full h-[260px] md:h-[280px] overflow-hidden relative">
                 <Image
                     src={p.img || "/default-user.png"}
                     alt={p.nama}
                     fill
                     className="object-cover object-center"
                 />
-            </div>
+            </div> */}
 
             {/* TEXT */}
             <div className="p-4 text-center bg-yellow-100/60">
@@ -163,22 +170,29 @@ export default function StrukturClient() {
                         className="bg-white rounded-2xl shadow-xl w-full max-w-[280px] sm:max-w-[300px] overflow-hidden animate-scaleIn"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* <div className="w-full aspect-[4/5]">
-                            <img
+                        <div className="w-full aspect-[4/5]">
+                            {/* <img
                                 src={selected.img || "/default-user.png"}
                                 alt={selected.nama}
                                 className="w-full h-full object-cover object-center"
+                            /> */}
+                            <Image
+                                src={selected.img || "/default-user.png"}
+                                alt={selected.nama}
+                                width={300}
+                                height={400}
+                                className="w-full h-full object-cover object-center"
                             />
-                        </div> */}
+                        </div>
 
-                        <div className="w-full aspect-[4/5] relative">
+                        {/* <div className="w-full aspect-[4/5] relative">
                             <Image
                                 src={selected.img || "/default-user.png"}
                                 alt={selected.nama}
                                 fill
                                 className="object-cover object-center"
                             />
-                        </div>
+                        </div> */}
 
                         <div className="p-5 text-center bg-yellow-100/60">
                             <h3 className="text-xl font-semibold text-gray-900">

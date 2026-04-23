@@ -12,7 +12,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
 
         <h1 className="font-bold text-blue-700">
-          PMII UNPAM
+          <Link href="/">PMII UNPAM</Link>
         </h1>
 
         {/* DESKTOP */}
