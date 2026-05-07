@@ -85,7 +85,7 @@ const pengurus = [
         nama: "Akhmad Alvi Sahri",
         jabatan: "Kepala Biro K3",
         ig: "#",
-        img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/default-user.webp",
+        img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur14.webp",
     },
 ];
 

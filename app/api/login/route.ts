@@ -6,9 +6,9 @@ export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();
 
-    console.log("DATABASE_URL RAW:", process.env.DATABASE_URL);
+    // console.log("DATABASE_URL RAW:", process.env.DATABASE_URL);
 
-    console.log("REQ:", { username, password });
+    // console.log("REQ:", { username, password });
 
     if (!username || !password) {
       return Response.json({ error: "Missing credentials" }, { status: 400 });
@@ -18,23 +18,23 @@ export async function POST(req: Request) {
       where: { username },
     });
 
-    console.log("USER:", user);
+    // console.log("USER:", user);
 
     if (!user) {
-      return Response.json({ error: "User not found" }, { status: 401 });
+      return Response.json({ error: "Username atau password salah" }, { status: 401 });
     }
 
-    console.log("COMPARE START");
+    // console.log("COMPARE START");
 
     const valid = await bcrypt.compare(password, user.password);
 
-    console.log("COMPARE RESULT:", valid);
+    // console.log("COMPARE RESULT:", valid);
 
     if (!valid) {
-      return Response.json({ error: "Wrong password" }, { status: 401 });
+      return Response.json({ error: "Username atau password salah" }, { status: 401 });
     }
 
-    console.log("JWT SIGN START");
+    // console.log("JWT SIGN START");
 
     const token = jwt.sign(
       { id: user.id },
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       { expiresIn: "7d" }
     );
 
-    console.log("SUCCESS LOGIN");
+    // console.log("SUCCESS LOGIN");
 
     return Response.json({
       token,

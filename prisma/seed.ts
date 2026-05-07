@@ -15,7 +15,7 @@ async function main() {
     },
   });
 
-  console.log("Admin created!");
+  // console.log("Admin created!");
 }
 
 main();
