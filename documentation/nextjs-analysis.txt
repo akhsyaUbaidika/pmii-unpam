@@ -1,0 +1,26 @@
+Next.js Technical Deep Analysis
+=====================================================
+
+## App Router Rendering Flow
+The project exclusively uses the Next.js App Router (`/app`). The architecture heavily leans on Server Components (RSC) by default. 
+- Pages like `app/page.tsx` and `app/artikel/[slug]/page.tsx` are rendered on the server.
+- This allows direct database access (via Prisma) within the page components without exposing credentials to the client, effectively bypassing the need for separate API calls for internal data fetching.
+
+## Server vs. Client Components
+- **Server Components (Default)**: Used for layout, static content, and data fetching. Improves SEO, reduces bundle size, and protects secrets.
+- **Client Components (`"use client"`)**: Employed only when browser interactivity is required. Examples include `Navbar.tsx` (for mobile menu toggles), `ImageUploader.tsx` (for handling file input and `FormData`), and `DocumentationCarousel.tsx` (using Swiper.js which relies on the DOM).
+
+## Data Fetching Strategy
+Two primary patterns are observed:
+1. **Direct Server-Side Fetching**: Fetching data using Prisma directly inside Server Components (e.g., `const articles = await prisma.article.findMany()`). This is highly performant and SEO-friendly.
+2. **Client-Side API Calls**: The Admin dashboard utilizes standard HTTP `fetch` requests to `/api` endpoints because operations like creating/editing require JWT authentication stored in client state/headers.
+
+## Dynamic Route Handling
+Routes like `/artikel/[slug]` use dynamic segments. Next.js passes the `params` object (containing the `slug`) to the page component. The server then queries the database for that specific slug to render the page.
+
+## Middleware & Auth Flow
+Authentication is handled via custom API routes (`/api/login`) rather than NextAuth.js. The JWT is manually verified on protected API routes using `lib/auth.ts`. There is no global Next.js `middleware.ts` file visible in the root, implying route protection is handled within the specific API route handlers and likely via `useEffect` redirects in Admin Client Components.
+
+## SEO & Rendering Implications
+- Utilizing Server Components for public routes (`/artikel`, `/dokumentasi`) guarantees that search engine crawlers receive fully populated HTML, maximizing indexing potential.
+- The global `app/layout.tsx` defines static `metadata` including OpenGraph tags, ensuring consistent social sharing previews.

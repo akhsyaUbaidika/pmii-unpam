@@ -1,0 +1,34 @@
+Activity Diagram: Admin Login Flow
+=====================================================
+
+## Explanation
+Detailed activity flow for the Administrator login process, illustrating the exact technical steps from submission to token generation.
+
+## Related Files
+- `app/api/login/route.ts`
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> Request[POST /api/login]
+    Request --> Extract{Extract Username & Password}
+    
+    Extract -- Missing --> Err400[Return 400 Bad Request]
+    Err400 --> End((End))
+    
+    Extract -- Provided --> QueryDB[Prisma: findUnique(username)]
+    QueryDB --> CheckUser{User Exists?}
+    
+    CheckUser -- No --> Err401[Return 401 Unauthorized]
+    Err401 --> End
+    
+    CheckUser -- Yes --> CompareHash[Bcrypt: compare(password, hash)]
+    CompareHash --> CheckHash{Is Valid?}
+    
+    CheckHash -- No --> Err401_2[Return 401 Unauthorized]
+    Err401_2 --> End
+    
+    CheckHash -- Yes --> GenJWT[JWT: sign(payload, secret)]
+    GenJWT --> ReturnToken[Return 200 OK with Token]
+    ReturnToken --> End
+```

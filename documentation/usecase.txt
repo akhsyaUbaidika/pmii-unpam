@@ -1,0 +1,54 @@
+Use Case Analysis
+=====================================================
+
+## Explanation
+The Use Case diagram illustrates the primary interactions between the actors and the system. The system accommodates two main actors: the Public User (visitor) and the Administrator. 
+- Public Users can browse the organizational history, view structural information, read articles, view documentation, and initiate SK (Surat Keputusan) submissions.
+- Administrators have elevated privileges. They must authenticate (login) to access the dashboard. Once authenticated, they can manage (create, update, delete) articles and documentations, as well as handle media uploads.
+
+## Related Files
+- `app/page.tsx`
+- `app/admin/layout.tsx`
+- `app/api/login/route.ts`
+- `app/api/articles/route.ts`
+
+## Inferred Actors/Entities/Components
+- Actors: Public User, Administrator
+- Use Cases: Browse Content, Read Articles, Submit SK, Login, Manage Articles, Manage Documentations, Upload Media.
+
+## Relationships
+- The Administrator actor inherits or encompasses some basic viewing capabilities but primarily interacts with the management use cases.
+- "Manage Articles" and "Manage Documentations" `<include>` the "Upload Media" use case.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+usecaseDiagram
+    actor "Public User" as User
+    actor "Administrator" as Admin
+
+    package "PMII UNPAM Platform" {
+        usecase "Browse Profil (Sejarah/Struktur)" as UC1
+        usecase "Read Articles" as UC2
+        usecase "View Documentations" as UC3
+        usecase "Submit Pengajuan SK" as UC4
+        
+        usecase "Login to Dashboard" as UC5
+        usecase "Manage Articles" as UC6
+        usecase "Manage Documentations" as UC7
+        usecase "Upload Media/Images" as UC8
+    }
+
+    User --> UC1
+    User --> UC2
+    User --> UC3
+    User --> UC4
+
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC7
+    
+    UC6 ..> UC8 : <<includes>>
+    UC7 ..> UC8 : <<includes>>
+    
+    Admin --|> User
+```

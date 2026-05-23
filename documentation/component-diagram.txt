@@ -1,0 +1,71 @@
+Component Diagram Analysis
+=====================================================
+
+## Explanation
+The Component Diagram showcases the modular structure of the Next.js application. It breaks down the system into the Presentation Layer (UI Components and Pages), the API Layer (Next.js Routes acting as backend controllers), the Service Layer (authentication and database utilities), and the Data Layer (external services and databases). 
+
+## Related Files
+- `components/Navbar.tsx`
+- `components/DocumentationCarousel.tsx`
+- `app/api/*`
+- `lib/auth.ts`
+- `lib/prisma.ts`
+
+## Inferred Actors/Entities/Components
+- UI Components: Global UI elements used across pages.
+- Client Pages / Server Pages: The actual route views.
+- Auth Module: Handles JWT logic.
+- API Controllers: The Request handlers in `app/api`.
+- Database Access (Prisma).
+
+## Relationships
+- Pages utilize UI Components.
+- Client-side Pages/Components call API Controllers via HTTP.
+- Server-side Pages query Database Access directly.
+- API Controllers depend on Auth Module and Database Access.
+
+## Textual UML Representation (PlantUML)
+*(Note: Using Mermaid for consistency as it renders natively on GitHub and most markdown viewers)*
+```mermaid
+graph TD
+    subgraph "Presentation Layer (Next.js App Router)"
+        Pages[App Pages (e.g., /artikel)]
+        UI[Shared Components (Navbar, Carousel)]
+    end
+
+    subgraph "API Layer"
+        ArticleAPI[Articles Route]
+        DocAPI[Documentations Route]
+        AuthAPI[Login Route]
+    end
+
+    subgraph "Service & Integration Layer"
+        AuthSvc[lib/auth.ts (JWT)]
+        DBClient[lib/prisma.ts]
+        UploadSvc[Supabase Storage]
+    end
+
+    subgraph "Data Layer"
+        Postgres[(PostgreSQL)]
+    end
+
+    Pages --> UI
+    Pages -.->|HTTP Fetch| ArticleAPI
+    Pages -.->|HTTP Fetch| DocAPI
+    Pages -.->|HTTP Fetch| AuthAPI
+    
+    Pages -->|Direct DB Access (RSC)| DBClient
+
+    AuthAPI --> AuthSvc
+    ArticleAPI --> AuthSvc
+    DocAPI --> AuthSvc
+
+    ArticleAPI --> UploadSvc
+    DocAPI --> UploadSvc
+
+    AuthAPI --> DBClient
+    ArticleAPI --> DBClient
+    DocAPI --> DBClient
+
+    DBClient --> Postgres
+```

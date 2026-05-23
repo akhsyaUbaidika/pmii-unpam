@@ -1,0 +1,63 @@
+API Flow Analysis
+=====================================================
+
+## Explanation
+The backend logic is entirely encapsulated within Next.js Route Handlers (`app/api/*`). The API exposes endpoints for Authentication, Article Management, Documentation Management, and Media Uploads.
+
+## Inferred CRUD Operations & Data Fetching Patterns
+- `/api/login` (POST): Authenticates admin, compares bcrypt hashes, returns JWT.
+- `/api/articles` (GET, POST): Fetches all articles or creates a new one. POST requires a valid JWT extracted from the `Authorization: Bearer <token>` header.
+- `/api/articles/[slug]` (GET, PUT, DELETE): Manages specific articles based on slug. Mutations require JWT.
+- `/api/documentations` (GET, POST): Similar to articles, manages event galleries.
+- `/api/documentations/[slug]` (GET, PUT, DELETE): Manages specific documentations.
+- `/api/upload` (POST): Handles multipart/form-data. Interacts with Supabase to store images and returns public URLs.
+
+## Related Files
+- `app/api/login/route.ts`
+- `app/api/articles/route.ts`
+- `app/api/articles/[slug]/route.ts`
+- `app/api/upload/route.ts`
+
+## Relationships
+- Protected routes validate requests using the `verifyToken` function from `lib/auth.ts`.
+- All routes interact directly with PostgreSQL via `prisma`.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart LR
+    Client([Client / Frontend])
+    
+    subgraph "API Routes (/app/api)"
+        Login[POST /login]
+        ArtGET[GET /articles]
+        ArtPOST[POST /articles]
+        ArtUD[PUT/DELETE /articles/:slug]
+        DocGET[GET /documentations]
+        DocPOST[POST /documentations]
+        Upload[POST /upload]
+    end
+    
+    AuthSvc{JWT Verification}
+    DB[(PostgreSQL via Prisma)]
+    Supabase[(Supabase Storage)]
+    
+    Client -->|Credentials| Login
+    Client -->|Fetch Public Data| ArtGET
+    Client -->|Fetch Public Data| DocGET
+    Client -->|Form Data + JWT| ArtPOST
+    Client -->|Form Data + JWT| ArtUD
+    Client -->|Form Data + JWT| DocPOST
+    Client -->|File Data + JWT| Upload
+    
+    ArtPOST --> AuthSvc
+    ArtUD --> AuthSvc
+    DocPOST --> AuthSvc
+    Upload --> AuthSvc
+    
+    AuthSvc -- Valid --> DB
+    Login --> DB
+    ArtGET --> DB
+    DocGET --> DB
+    
+    AuthSvc -- Valid --> Supabase
+```

@@ -1,0 +1,49 @@
+Activity Diagram Analysis: Article Creation Flow
+=====================================================
+
+## Explanation
+This activity diagram models the workflow for an Administrator creating a new article in the system. It covers the client-side actions (filling out the form, uploading an image), the server-side validation (JWT verification, payload validation), database interaction (slug generation and uniqueness check, Prisma insert), and the final response back to the client.
+
+## Related Files
+- `app/admin/artikel/new/page.tsx`
+- `app/api/articles/route.ts`
+- `lib/auth.ts`
+- `lib/prisma.ts`
+
+## Inferred Actors/Entities/Components
+- Admin Client (Browser)
+- Next.js API (`/api/articles`)
+- Database (PostgreSQL / Prisma)
+
+## Relationships
+- The Admin Client sends a POST request with the token and article data to the Next.js API.
+- The API verifies the token, processes the input, and interacts with the Database.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> FillForm[Admin fills Article Form]
+    FillForm --> UploadImg[Admin uploads cover image]
+    UploadImg --> SubmitForm[Admin submits form]
+    
+    SubmitForm --> API_Receive[API: Receive POST /api/articles]
+    API_Receive --> AuthCheck{Is Token Valid?}
+    
+    AuthCheck -- No --> Ret401[Return 401 Unauthorized]
+    Ret401 --> End((End))
+    
+    AuthCheck -- Yes --> ValidatePayload{Are Title & Content present?}
+    
+    ValidatePayload -- No --> Ret400[Return 400 Bad Request]
+    Ret400 --> End
+    
+    ValidatePayload -- Yes --> GenSlug[Generate Slug from Title]
+    GenSlug --> CheckSlug{Does Slug exist in DB?}
+    
+    CheckSlug -- Yes --> Ret409[Return 409 Conflict]
+    Ret409 --> End
+    
+    CheckSlug -- No --> SaveDB[Prisma: Create Article in DB]
+    SaveDB --> Ret200[Return 200 OK & Article Data]
+    Ret200 --> End
+```

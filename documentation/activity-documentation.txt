@@ -1,0 +1,29 @@
+Activity Diagram: Documentation CRUD Flow
+=====================================================
+
+## Explanation
+This diagram models the creation flow for a "Documentation" entry, which involves handling a one-to-many relationship (one documentation event, multiple images) using Prisma's nested writes.
+
+## Related Files
+- `app/api/documentations/route.ts`
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> AuthCheck{JWT Valid?}
+    AuthCheck -- No --> Ret401[Return 401] --> End((End))
+    
+    AuthCheck -- Yes --> ParseJSON[Parse Request JSON]
+    ParseJSON --> ValidFields{Title & Content?}
+    ValidFields -- No --> Ret400[Return 400] --> End
+    
+    ValidFields -- Yes --> GenSlug[Generate Slug]
+    GenSlug --> CheckSlug{Slug Unique?}
+    CheckSlug -- No --> Ret409[Return 409 Conflict] --> End
+    
+    CheckSlug -- Yes --> ExtractImages[Extract images array]
+    ExtractImages --> PrismaCreate[Prisma: create Documentation + nested create Images]
+    
+    PrismaCreate --> Ret200[Return 200 Created Data]
+    Ret200 --> End
+```

@@ -1,0 +1,54 @@
+Project Architecture Analysis
+=====================================================
+
+## Explanation
+The project follows a modern monolithic architecture using Next.js 14+ App Router. The application is divided into a frontend (React Server and Client Components) and a backend (Next.js API Routes). 
+
+- **Frontend Structure & Routing Flow:** Routing is filesystem-based within the `/app` directory. Public routes (`/artikel`, `/dokumentasi`, `/profil`) are accessible to everyone. Admin routes (`/admin`) are protected by middleware or client-side checks. Dynamic routes like `[slug]` are used for individual articles and documentations.
+- **Server/Client Components:** Most pages default to Server Components for SEO and performance. Components requiring interactivity or hooks (`useState`, `useEffect`), such as `Navbar.tsx`, `ImageUploader.tsx`, and `StrukturClient.tsx`, are marked with `"use client"`.
+- **Data Fetching:** Data is fetched directly in Server Components (e.g., querying Prisma directly in page components) or via Client Components calling the internal `/api` endpoints.
+- **Middleware & Services:** `lib/auth.ts` provides JWT verification and extraction. `lib/prisma.ts` instantiates the Prisma client. `lib/upload.ts` likely handles Supabase interactions.
+
+## Related Files
+- `app/api/*` (Backend API Routes)
+- `app/admin/*` (Admin Frontend)
+- `components/*` (Reusable UI Components)
+- `lib/*` (Shared Utilities and Services)
+
+## Inferred Actors/Entities/Components
+- Frontend Components: `Navbar`, `TopLoader`, `DocumentationCarousel`, `ImageUploader`
+- Backend Services: `Prisma Client`, `JWT Service`, `Supabase Storage Service`
+
+## Relationships
+- Pages utilize Reusable Components.
+- Client Components make HTTP requests to API Routes.
+- API Routes utilize Library Services (`prisma`, `auth`) to execute business logic.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+architecture-beta
+    group frontend(cloud)[Frontend App Router]
+    group backend(server)[Backend API Routes]
+    group data(database)[Data Layer]
+    
+    service client(internet)[Client Browser]
+    
+    service public_pages(server)[Public Pages] in frontend
+    service admin_pages(server)[Admin Dashboard] in frontend
+    service components(server)[UI Components] in frontend
+    
+    service api_articles(server)[/api/articles] in backend
+    service api_auth(server)[/api/login] in backend
+    
+    service db(database)[PostgreSQL] in data
+    service storage(cloud)[Supabase] in data
+    
+    client --> public_pages
+    client --> admin_pages
+    public_pages --> components
+    admin_pages --> api_auth
+    admin_pages --> api_articles
+    api_articles --> db
+    api_auth --> db
+    api_articles --> storage
+```

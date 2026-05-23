@@ -1,0 +1,69 @@
+State Diagram Analysis
+====================================================
+
+## Explanation
+This state diagram tracks the lifecycle of four core components within the system:
+1. **Authentication Session** – Admin login JWT lifecycle.
+2. **Article Lifecycle** – From draft creation to published state.
+3. **Documentation Lifecycle** – Creation, revision, publication, and archival.
+4. **Upload Process** – Multi‑step handling of media files.
+
+## Related Files
+- `lib/auth.ts`
+- `app/api/articles/route.ts`
+- `app/api/documentations/route.ts`
+- `app/api/upload/route.ts`
+
+## Inferred States and Transitions
+- **Auth**: Unauthenticated → Authenticating → Authenticated → Unauthenticated (logout / token expiry).
+- **Article**: Draft → Validating → Saving → Published (Success) | Error (Failure).
+- **Documentation**: Draft → Validating → Saving → Published → Archived (optional delete) | Error.
+- **Upload**: Idle → ValidatingFile → ProcessingImage → UploadingToSupabase → Success | Failure.
+
+## Failure States
+- **Auth**: Invalid credentials, token expiration.
+- **Article**: Missing required fields, slug conflict.
+- **Documentation**: Missing title/content, slug conflict.
+- **Upload**: File too large, unsupported MIME type, Supabase error.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+stateDiagram-v2
+    %% Authentication Session
+    state "Authentication Session" as AuthSession {
+        [*] --> Unauthenticated
+        Unauthenticated --> Authenticating : Submit Credentials
+        Authenticating --> Authenticated : Valid Credentials
+        Authenticating --> Unauthenticated : Invalid Credentials
+        Authenticated --> Unauthenticated : Token Expired / Logout
+    }
+
+    %% Article Lifecycle
+    state "Article Lifecycle" as ArticleLife {
+        Draft --> Validating : Submit Form
+        Validating --> Saving : Pass Validation
+        Saving --> Published : DB Success
+        Saving --> Error : DB Failure
+    }
+
+    %% Documentation Lifecycle
+    state "Documentation Lifecycle" as DocLife {
+        Draft --> Validating : Submit Form
+        Validating --> Saving : Pass Validation
+        Saving --> Published : DB Success
+        Saving --> Error : DB Failure
+        Published --> Archived : Manual Delete
+    }
+
+    %% Upload Process
+    state "Upload Process" as UploadProc {
+        Idle --> ValidatingFile : File Selected
+        ValidatingFile --> ProcessingImage : Valid Type & Size
+        ValidatingFile --> UploadFailed : Invalid Size/Type
+        ProcessingImage --> UploadingToSupabase : Sharp Optimized
+        UploadingToSupabase --> UploadSuccess : URL Returned
+        UploadingToSupabase --> UploadFailed : Network/Supabase Error
+        UploadSuccess --> [*]
+        UploadFailed --> [*]
+    }
+```

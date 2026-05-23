@@ -1,0 +1,29 @@
+Activity Diagram: Public Article Reading Flow
+=====================================================
+
+## Explanation
+This diagram outlines how a public user accesses and reads a specific article, leveraging dynamic routing and server-side data fetching.
+
+## Related Files
+- `app/api/articles/[slug]/route.ts`
+- `app/artikel/[slug]/page.tsx`
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> ClickLink[User clicks Article Link]
+    ClickLink --> Request[GET /artikel/:slug]
+    
+    Request --> FetchAPI[Client fetches /api/articles/:slug]
+    FetchAPI --> QueryDB[Prisma: findUnique(slug)]
+    
+    QueryDB --> CheckExist{Article Exists?}
+    
+    CheckExist -- No --> Ret404[API Returns 404]
+    Ret404 --> Render404[UI Displays Not Found]
+    Render404 --> End((End))
+    
+    CheckExist -- Yes --> Ret200[API Returns Article JSON]
+    Ret200 --> RenderUI[Next.js Renders Article Page]
+    RenderUI --> End
+```

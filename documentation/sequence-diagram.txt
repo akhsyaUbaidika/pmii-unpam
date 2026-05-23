@@ -1,0 +1,53 @@
+Sequence Diagram Analysis: Admin Login
+=====================================================
+
+## Explanation
+This sequence diagram details the interaction during the Admin Login process. It traces the flow from the Client entering credentials, to the API endpoint handling the request, validating the user against the PostgreSQL database via Prisma, comparing password hashes using bcrypt, generating a JWT token, and returning the response to the client.
+
+## Related Files
+- `app/admin/login/page.tsx`
+- `app/api/login/route.ts`
+- `lib/prisma.ts`
+
+## Inferred Actors/Entities/Components
+- Client (Browser / Admin UI)
+- Login API (`/api/login/route.ts`)
+- Prisma ORM
+- Database (PostgreSQL)
+
+## Relationships
+- Client sends JSON payload to API.
+- API requests User details from Prisma.
+- Prisma queries Database.
+- API uses bcrypt for validation and jsonwebtoken for token generation.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+sequenceDiagram
+    participant Client as Browser (Admin UI)
+    participant API as /api/login
+    participant ORM as Prisma Client
+    participant DB as PostgreSQL
+    participant Auth as bcrypt & jwt
+
+    Client->>API: POST { username, password }
+    API->>ORM: findUnique(username)
+    ORM->>DB: SELECT * FROM Admin WHERE username
+    DB-->>ORM: Admin Record (or null)
+    ORM-->>API: Admin Record
+    
+    alt Admin Not Found
+        API-->>Client: 401 Unauthorized
+    else Admin Found
+        API->>Auth: bcrypt.compare(password, hash)
+        Auth-->>API: boolean (valid)
+        
+        alt Invalid Password
+            API-->>Client: 401 Unauthorized
+        else Valid Password
+            API->>Auth: jwt.sign(userId, secret)
+            Auth-->>API: Token string
+            API-->>Client: 200 OK { token, user }
+        end
+    end
+```

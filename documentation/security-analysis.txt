@@ -1,0 +1,35 @@
+Security Analysis Documentation
+=====================================================
+
+## JWT Authentication Flow
+Authentication is implemented via a stateless JSON Web Token (JWT) system.
+- Tokens are signed in `/api/login` upon successful password verification.
+- Expiration is set to 7 days (`expiresIn: "7d"`).
+- The secret key `JWT_SECRET` is used for signing and verification.
+
+## Authorization Validation
+Protected routes (e.g., POST `/api/articles`, POST `/api/documentations`, POST `/api/upload`) use `getTokenFromHeader` and `verifyToken` from `lib/auth.ts` to authorize requests.
+- The `Authorization: Bearer <token>` format is required.
+- If verification fails or the user ID is missing from the payload, a `401 Unauthorized` response is returned.
+
+## Password Hashing
+- Admin passwords are mathematically hashed using `bcryptjs` before storage.
+- Verification uses `bcrypt.compare()` which defends against timing attacks.
+
+## Upload Validation
+The `/api/upload` route implements multiple security checks:
+- **Authentication Check**: Rejects unauthenticated requests.
+- **MIME Type Validation**: Ensures the uploaded file's type starts with `image/`.
+- **Size Limitation**: Rejects files exceeding 5MB (Hardcoded MAX_SIZE).
+- **Processing Sanitization**: The `sharp` library implicitly sanitizes image payloads by decoding and re-encoding them as WebP, stripping potential malicious payloads hidden in metadata or malformed chunks.
+
+## Potential Vulnerabilities & Missing Protections
+1. **No Rate Limiting**: The `/api/login` route lacks rate limiting, making it susceptible to brute-force attacks.
+2. **Missing Input Sanitization**: Text content in articles/documentations is not explicitly sanitized against XSS (Cross-Site Scripting) on the server. If the frontend renders HTML dangerously (`dangerouslySetInnerHTML`), XSS is possible.
+3. **No CSRF Protection**: While JWTs in headers mitigate typical cookie-based CSRF, the specific client implementation needs to ensure token storage is secure (e.g., avoiding LocalStorage if possible to prevent XSS exfiltration).
+4. **Environment Variable Exposure**: If `DATABASE_URL` or `JWT_SECRET` leaks, the entire database and auth system are compromised.
+
+## Recommended Improvements
+- Implement Next.js rate limiting or use a service like Upstash/Redis for login routes.
+- Introduce DOMPurify or server-side HTML sanitization for article content.
+- Shift to secure, HTTP-only cookies for JWT storage instead of client-side headers.

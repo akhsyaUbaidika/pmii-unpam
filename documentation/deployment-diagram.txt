@@ -1,0 +1,40 @@
+Deployment Diagram Analysis
+=====================================================
+
+## Explanation
+The deployment diagram visualizes the physical or logical nodes where the system components reside. 
+- **Client Node**: Represents the user's web browser running the Next.js Client Components (React).
+- **Hosting Node (Vercel/Node.js)**: Represents the server hosting the Next.js application, executing Server Components, API routes, and the Prisma Client. It utilizes Node.js runtime (inferred from `export const runtime = "nodejs"` in the upload route).
+- **Database Node (PostgreSQL)**: The relational database storing the primary application data.
+- **Storage Node (Supabase)**: The external service handling object storage (images).
+
+## Inferred Environment Dependencies
+- `DATABASE_URL`: Connection string for PostgreSQL.
+- `JWT_SECRET`: Secret key for signing authentication tokens.
+- `SUPABASE_URL` & `SUPABASE_SERVICE_ROLE_KEY`: Credentials for external storage.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+architecture-beta
+    group client(cloud)[Client Environment]
+    group server(server)[Next.js Server Node]
+    group external(cloud)[External Cloud Services]
+    
+    service browser(internet)[Web Browser] in client
+    
+    service nextjs(server)[Next.js Runtime] in server
+    service api(server)[API Routes] in server
+    service prisma(server)[Prisma ORM] in server
+    
+    service postgres(database)[PostgreSQL DB] in external
+    service supabase(cloud)[Supabase Storage] in external
+    
+    browser --> nextjs
+    browser --> api
+    
+    nextjs --> api
+    api --> prisma
+    
+    prisma --> postgres
+    api --> supabase
+```

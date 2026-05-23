@@ -1,0 +1,46 @@
+Project Summary: PMII UNPAM Website
+=====================================================
+
+## Explanation
+This project is a web application built using the Next.js App Router architecture. It serves as the official platform for PMII (Pergerakan Mahasiswa Islam Indonesia) Komisariat Universitas Pamulang. The application features a public-facing informative website and a secure administrative dashboard. It utilizes React (Server and Client components), Tailwind CSS for styling, Prisma ORM for database interaction (PostgreSQL), and Supabase for media storage. Authentication is handled via JSON Web Tokens (JWT) using bcrypt for password hashing.
+
+## Related Files
+- `package.json`
+- `app/layout.tsx`
+- `prisma/schema.prisma`
+- `lib/auth.ts`
+- `app/page.tsx`
+
+## Inferred Actors/Entities/Components
+- Actors: Public User, Administrator
+- Core Entities: Article, Documentation
+- Components: Next.js App Router, Prisma ORM, Supabase Storage, Tailwind CSS
+
+## Relationships
+- Public Users interact with the Client UI (Pages and Components).
+- The Client UI fetches data from Next.js API Routes.
+- Administrators interact with the Admin Dashboard, requiring JWT authentication.
+- API Routes communicate with the PostgreSQL Database via Prisma.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+graph TD
+    User([Public User])
+    Admin([Administrator])
+    
+    subgraph "Next.js Application"
+        UI[Public UI / App Router]
+        Dashboard[Admin Dashboard]
+        API[Next.js API Routes]
+    end
+    
+    DB[(PostgreSQL Database)]
+    Storage[(Supabase Storage)]
+    
+    User -->|Views Pages| UI
+    Admin -->|Manages Content| Dashboard
+    Dashboard -->|JWT Auth Requests| API
+    UI -->|Data Fetch| API
+    API -->|Prisma ORM| DB
+    API -->|Uploads Media| Storage
+```

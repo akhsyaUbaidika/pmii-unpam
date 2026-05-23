@@ -1,0 +1,64 @@
+Entity Relationship Diagram (ERD) & Database Inference
+=====================================================
+
+## Explanation
+The ERD reflects the relational database schema defined in `prisma/schema.prisma`. 
+- **Admin**: Stores credentials for dashboard access.
+- **Article**: Stores individual blog/news posts. No explicit foreign key connects to Admin, instead relying on a simple string `authorName`.
+- **Documentation**: Stores events or gallery collections.
+- **DocumentationImage**: Stores individual image URLs linked to a Documentation entry.
+
+The structure implies standard CRUD operations on Articles and Documentations, with cascading deletes applied to DocumentationImage when its parent Documentation is removed.
+
+## Related Files
+- `prisma/schema.prisma`
+- `prisma/migrations/*`
+
+## Inferred Actors/Entities/Components
+- Entities: `Admin`, `Article`, `Documentation`, `DocumentationImage`.
+
+## Relationships
+- `Documentation` (1) to `DocumentationImage` (N).
+- Cascade delete constraint on `DocumentationImage.documentationId` referencing `Documentation.id`.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+erDiagram
+    Admin {
+        Int id PK
+        String username UK
+        String password
+        DateTime createdAt
+    }
+
+    Article {
+        Int id PK
+        String title
+        String slug UK
+        String excerpt
+        Text content
+        String image
+        String category
+        String authorName
+        DateTime publishedAt
+        DateTime createdAt
+    }
+
+    Documentation {
+        Int id PK
+        String title
+        String slug UK
+        String excerpt
+        Text content
+        String coverImage
+        DateTime createdAt
+    }
+
+    DocumentationImage {
+        Int id PK
+        String imageUrl
+        Int documentationId FK
+    }
+
+    Documentation ||--o{ DocumentationImage : "has many"
+```

@@ -1,0 +1,44 @@
+Activity Diagram: Upload Media Flow
+=====================================================
+
+## Explanation
+This activity diagram maps the intricate image upload and optimization process. It demonstrates the use of the `sharp` library for image manipulation before passing the optimized buffer to Supabase storage.
+
+## Related Files
+- `app/api/upload/route.ts`
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> AuthCheck{JWT Valid?}
+    
+    AuthCheck -- No --> Err401[Return 401]
+    Err401 --> End((End))
+    
+    AuthCheck -- Yes --> ParseForm[Parse FormData]
+    ParseForm --> HasFile{File Exists?}
+    
+    HasFile -- No --> Err400_1[Return 400 No File]
+    Err400_1 --> End
+    
+    HasFile -- Yes --> IsImage{Is image/* ?}
+    IsImage -- No --> Err400_2[Return 400 Invalid Type]
+    Err400_2 --> End
+    
+    IsImage -- Yes --> CheckSize{Size <= 5MB?}
+    CheckSize -- No --> Err400_3[Return 400 Too Large]
+    Err400_3 --> End
+    
+    CheckSize -- Yes --> ToBuffer[Convert to ArrayBuffer]
+    ToBuffer --> SharpProc[Sharp: Resize (max 1200w) & Convert to WebP]
+    
+    SharpProc --> SupabaseUpload[Upload to Supabase Storage]
+    SupabaseUpload --> CheckUpload{Success?}
+    
+    CheckUpload -- No --> Err500[Return 500 Upload Failed]
+    Err500 --> End
+    
+    CheckUpload -- Yes --> GetUrl[Retrieve Public URL]
+    GetUrl --> Ret200[Return 200 with URL]
+    Ret200 --> End
+```

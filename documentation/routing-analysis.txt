@@ -1,0 +1,50 @@
+Routing Analysis & Navigation Flow
+=====================================================
+
+## Explanation
+The application uses the Next.js App Router (`/app`). Routing is heavily tied to the file system structure. The app provides a clear separation between the public-facing pages (marketing, info, blogs) and the protected admin dashboard.
+
+## Page Lifecycle and Dynamic Routing
+- Static pages like `/profil/sejarah` and `/kontak` provide structural information.
+- Dynamic routes like `/artikel/[slug]` use the `slug` param to fetch specific entries from the database using Server Components.
+- The `/admin/*` directory contains the dashboard layout and CRUD interfaces.
+
+## Related Files
+- `app/layout.tsx` (Global Layout)
+- `app/page.tsx` (Home)
+- `app/admin/layout.tsx` (Admin Layout)
+- `app/artikel/[slug]/page.tsx` (Dynamic Article Page)
+
+## Inferred Actors/Entities/Components
+- Public Navigation Flow: Home -> Profil / Artikel / Dokumentasi.
+- Admin Navigation Flow: `/admin/login` -> `/admin` -> `/admin/artikel/new`.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+mindmap
+  root((PMII UNPAM App Router))
+    Public Pages
+      (/) Home
+      /profil
+        /sejarah
+        /struktur
+      /artikel
+        /[slug]
+      /dokumentasi
+        /[slug]
+      /pengajuan-sk
+      /kontak
+    Admin Dashboard
+      /admin/login
+      /admin (Dashboard Home)
+      /admin/artikel
+        /new
+        /[slug]/edit
+      /admin/dokumentasi
+        /new
+    API Endpoints
+      /api/login
+      /api/articles
+      /api/documentations
+      /api/upload
+```

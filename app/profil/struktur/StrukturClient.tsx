@@ -52,7 +52,7 @@ const pengurus = [
         img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur8.webp",
     },
     {
-        nama: "Berliana Silvia",
+        nama: "Berliana Silvia Qairha",
         jabatan: "Sekretaris Bidang 2",
         ig: "#",
         img: "https://mpwjmwrybukmjvbpqufm.supabase.co/storage/v1/object/public/uploads/struktur9.webp",

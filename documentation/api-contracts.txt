@@ -1,0 +1,75 @@
+API Contract Documentation
+=====================================================
+
+## 1. Authentication (`/api/login`)
+- **Endpoint**: `/api/login`
+- **Method**: `POST`
+- **Auth Required**: No
+- **Request Body**: `JSON`
+  - `username` (string, required)
+  - `password` (string, required)
+- **Response**: `200 OK`
+  - `token` (string)
+  - `user` (object: id, username)
+- **Error Codes**: `400` (Missing credentials), `401` (Invalid credentials), `500`
+
+## 2. Articles (`/api/articles`)
+- **Endpoint**: `/api/articles`
+- **Method**: `GET`
+- **Auth Required**: No
+- **Response**: `200 OK`
+  - Array of Article objects sorted by `createdAt` descending.
+- **Error Codes**: `500`
+
+- **Endpoint**: `/api/articles`
+- **Method**: `POST`
+- **Auth Required**: Yes (Bearer Token)
+- **Request Body**: `JSON`
+  - `title` (string, required)
+  - `content` (string, required)
+  - `excerpt` (string, optional)
+  - `image` (string/URL, optional)
+  - `category` (string, optional)
+  - `author` (string, optional)
+- **Response**: `200 OK`
+  - Created Article object.
+- **Error Codes**: `400` (Missing fields), `401` (Unauthorized), `409` (Slug conflict), `500`
+
+## 3. Article Detail (`/api/articles/[slug]`)
+- **Endpoint**: `/api/articles/:slug`
+- **Method**: `GET`
+- **Auth Required**: No
+- **Response**: `200 OK`
+  - Single Article object.
+- **Error Codes**: `404` (Not Found), `500`
+
+## 4. Documentations (`/api/documentations`)
+- **Endpoint**: `/api/documentations`
+- **Method**: `GET`
+- **Auth Required**: No
+- **Response**: `200 OK`
+  - Array of Documentation objects including nested `images`.
+
+- **Endpoint**: `/api/documentations`
+- **Method**: `POST`
+- **Auth Required**: Yes (Bearer Token)
+- **Request Body**: `JSON`
+  - `title` (string, required)
+  - `content` (string, required)
+  - `excerpt` (string, optional)
+  - `coverImage` (string, optional)
+  - `images` (array of strings/URLs, optional)
+- **Response**: `200 OK`
+  - Created Documentation object with nested images.
+- **Error Codes**: `400`, `401`, `409`, `500`
+
+## 5. Media Upload (`/api/upload`)
+- **Endpoint**: `/api/upload`
+- **Method**: `POST`
+- **Auth Required**: Yes (Bearer Token)
+- **Request Body**: `multipart/form-data`
+  - `file` (File blob, required, image/*, max 5MB)
+- **Response**: `200 OK`
+  - `url` (string, public Supabase URL)
+  - `message` (string)
+- **Error Codes**: `400` (No file, invalid type, too large), `401` (Unauthorized), `500` (Upload failed)

@@ -1,0 +1,39 @@
+Database Dictionary
+=====================================================
+
+## Table: Admin
+Stores administrator credentials for the dashboard.
+- `id` (Int): Primary Key, Auto-increment. Unique identifier.
+- `username` (String): Unique. Login identifier.
+- `password` (String): Bcrypt hashed password.
+- `createdAt` (DateTime): Auto-generated timestamp.
+
+## Table: Article
+Stores blog posts, news, and opinion pieces.
+- `id` (Int): Primary Key, Auto-increment.
+- `title` (String): Display title.
+- `slug` (String): Unique. URL-friendly identifier generated from the title.
+- `excerpt` (String): Short summary for card displays.
+- `content` (String, db.Text): Full HTML or Markdown content body.
+- `image` (String): URL pointing to the cover image.
+- `category` (String): Categorization tag (e.g., "Opini").
+- `authorName` (String): Name of the writer, defaults to "Admin".
+- `publishedAt` (DateTime): Timestamp of publication, defaults to now.
+- `createdAt` (DateTime): Record creation timestamp.
+
+## Table: Documentation
+Stores event galleries and activity reports.
+- `id` (Int): Primary Key, Auto-increment.
+- `title` (String): Event title.
+- `slug` (String): Unique. URL-friendly identifier.
+- `excerpt` (String): Short summary of the event.
+- `content` (String, db.Text): Detailed description of the event.
+- `coverImage` (String): Main thumbnail URL.
+- `createdAt` (DateTime): Record creation timestamp.
+
+## Table: DocumentationImage
+Stores individual images tied to a specific Documentation event.
+- `id` (Int): Primary Key, Auto-increment.
+- `imageUrl` (String): The public URL of the uploaded image.
+- `documentationId` (Int): Foreign Key referencing `Documentation.id`.
+- *Constraint*: `onDelete: Cascade`. If the parent Documentation is deleted, associated images are removed from the database (does not automatically delete from Supabase storage).

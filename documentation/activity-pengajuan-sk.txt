@@ -1,0 +1,17 @@
+Activity Diagram: Pengajuan SK Submission Flow
+=====================================================
+
+## Explanation
+The "Pengajuan SK" (SK Submission) feature is currently a placeholder UI displaying a "Coming Soon 🚧" message. The backend flow does not exist yet. This activity diagram reflects the current implemented state.
+
+## Related Files
+- `app/pengajuan-sk/page.tsx`
+
+## Textual UML Representation (Mermaid)
+```mermaid
+flowchart TD
+    Start((Start)) --> Nav[User navigates to /pengajuan-sk]
+    Nav --> Render[Next.js renders Page component]
+    Render --> Display[Display 'Coming Soon 🚧' message]
+    Display --> End((End))
+```

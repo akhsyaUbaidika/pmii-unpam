@@ -1,0 +1,63 @@
+Class Diagram Analysis
+=====================================================
+
+## Explanation
+This class diagram illustrates the conceptual models inferred primarily from the Prisma schema and the Next.js API payloads. It models the core domain entities used throughout the application. The `Admin` entity represents the platform administrators. The `Article` entity stores blog/news content. The `Documentation` entity stores event records and has a one-to-many relationship with `DocumentationImage`, allowing multiple images to be attached to a single documentation event.
+
+## Related Files
+- `prisma/schema.prisma`
+- `app/api/articles/route.ts`
+- `app/api/documentations/route.ts`
+
+## Inferred Actors/Entities/Components
+- `Admin`: User account for dashboard access.
+- `Article`: Content entries written by an Admin.
+- `Documentation`: Event galleries.
+- `DocumentationImage`: Specific image files tied to a Documentation event.
+
+## Relationships
+- A `Documentation` contains one or more `DocumentationImage`s. (1 to Many)
+- Admin conceptually authors Articles, though the DB just stores `authorName` as a String currently, indicating a loosely coupled relationship or simplified data model.
+
+## Textual UML Representation (Mermaid)
+```mermaid
+classDiagram
+    class Admin {
+        +Int id
+        +String username
+        +String password
+        +DateTime createdAt
+    }
+
+    class Article {
+        +Int id
+        +String title
+        +String slug
+        +String excerpt
+        +String content
+        +String image
+        +String category
+        +String authorName
+        +DateTime publishedAt
+        +DateTime createdAt
+    }
+
+    class Documentation {
+        +Int id
+        +String title
+        +String slug
+        +String excerpt
+        +String content
+        +String coverImage
+        +DateTime createdAt
+        +getImages() List~DocumentationImage~
+    }
+
+    class DocumentationImage {
+        +Int id
+        +String imageUrl
+        +Int documentationId
+    }
+
+    Documentation "1" *-- "many" DocumentationImage : contains
+```
